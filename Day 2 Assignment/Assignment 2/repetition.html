@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Number Generator</title>
+    <style>
+        .main{
+            margin: 250px auto;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            gap: 40px;
+        }
+        p, .result{
+            font: 40px bold black;
+        }
+
+        div{
+            display: flex;
+            flex-direction: column;
+            gap: 1 rem;
+        }
+    </style>
+</head>
+<body>
+    <section class="main">
+        <p>Number Generator</p>
+        <input type="text" name="number" id="number">
+        <button class="generate">Click to Check</button>
+        <div class="result"></div>
+    </section>
+    <script src="EvenOddRange.js"></script>
+</body>
+</html>
