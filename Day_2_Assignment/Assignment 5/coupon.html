@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Price Calculator</title>
+    <style>
+        .main{
+            margin: 150px auto;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            gap: 40px;
+        }
+        p, .result{
+            font: 40px bold black;
+        }
+
+        #role, #quantity, .check{
+            height: 40px;
+            width: 250px;
+        }
+    </style>
+</head>
+<body>
+    <section class="main">
+        <p>Coupon Discount</p>
+        <input type="text" name="number" id="price" placeholder="price">
+        <input type="text" name="quantity" id="code" placeholder="code">
+        <button class="check">Click to Calculate price</button>
+        <p class="result"></p>
+    </section>
+    <script src="CouponDiscount.js"></script>
+</body>
+</html>
