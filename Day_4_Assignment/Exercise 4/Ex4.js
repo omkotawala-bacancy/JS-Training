@@ -13,6 +13,10 @@ let user = {
 
 function deepCopy(obj){
 
+    if (obj === null || typeof obj !== 'object') {
+        return obj;
+    }
+
     const result = Array.isArray(obj) ? [] : {};
 
     for (const key in obj) {
@@ -37,7 +41,11 @@ function deepCopy(obj){
 
 let vishw = deepCopy(user)
 
+let om = deepCopy("Om Kotawala")
+
 vishw.marks.maths = 99
 vishw.hobbies[0] = "Playing Cricket"
 
-console.log(user.hello === vishw.hello);
+console.log(vishw.hello === user.hello);
+console.log(om);
+
