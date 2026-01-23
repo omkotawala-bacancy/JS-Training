@@ -42,10 +42,13 @@ function deepCopy(obj){
 let vishw = deepCopy(user)
 
 let om = deepCopy("Om Kotawala")
+let fn = deepCopy(function hii(){console.log("Su keh")})
 
 vishw.marks.maths = 99
 vishw.hobbies[0] = "Playing Cricket"
 
 console.log(vishw.hello === user.hello);
-console.log(om);
+console.log(fn);
+
+
 
