@@ -17,9 +17,18 @@ const inventory = [
 
 // We can do the same without map
 
-let final_Price = inventory.filter((p) => p.stock > 0)
-    .reduce((acc, p) => {
-        return acc + (p.price * p.stock)
-    }, 0)
+// let final_Price = inventory.filter((p) => p.stock > 0)
+//     .reduce((acc, p) => {
+//         return acc + (p.price * p.stock)
+//     }, 0)
 
+
+//Other way is 
+
+let final_Price = inventory.reduce((total,product) => {
+    if(product.stock > 0){
+        total += (product.price * product.stock);
+    }
+    return total
+}, 0)
 console.log(final_Price)
