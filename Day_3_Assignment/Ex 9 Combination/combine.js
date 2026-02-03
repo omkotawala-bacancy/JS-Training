@@ -25,7 +25,7 @@ const inventory = [
 
 //Other way is 
 
-let final_Price = inventory.reduce((total,product) => {
+const final_Price = inventory.reduce((total,product) => {
     if(product.stock > 0){
         total += (product.price * product.stock);
     }

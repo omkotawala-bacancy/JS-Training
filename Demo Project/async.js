@@ -18,9 +18,6 @@ const executefunction  = async function(tasks){
     });
 
     let count = 0;
-    let total = arr.length
-
-    
 
     const finalPromise = new Promise((resolve, reject) => {
             arr.forEach(promise => {
@@ -30,7 +27,7 @@ const executefunction  = async function(tasks){
                     .finally(() =>{
                         count++;
 
-                        if(count === total){
+                        if(count === arr.length){
                             resolve("All task Completed")
                         }
                     })
