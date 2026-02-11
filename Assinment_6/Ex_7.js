@@ -5,7 +5,7 @@
 */
 
 const toss = new Promise((resolve,reject) => {
-    let random = Math.random()
+    const random = Math.random()
     if(random > 0.5){
         resolve("Heads")
     }
