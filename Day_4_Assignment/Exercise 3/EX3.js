@@ -23,7 +23,7 @@ console.log(myPhone.brand);
         4). returns that object 
 
         But here we are explicitly returning the object that will discard the this object of the constructor and the reurn object will be assigned to the myPhone.
-        So due to this the output is "Gneric" instead of "Apple".
+        So due to this the prototype type chaining will be like "myPhone -> Object -> null" and thus the output is "Gneric" instead of "Apple".
 */
 
 console.log(myPhone.getBrand); 
