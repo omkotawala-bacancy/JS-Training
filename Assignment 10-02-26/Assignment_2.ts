@@ -29,8 +29,8 @@ const a: any = "Om"
 
 const b: unknown = "Kotawala"
 
-console.log(a.toUpperCase()); // Here it will run as the type isa ny but it is not safe if we are using String methods and the a is number than runtime error will arrise
-//console.log(b.toUpperCase()) // Here it will show compile time error as the b is unknown and we can directly usd=e the methods on it.
+console.log(a.toUpperCase()); // Here it will run as the type is any but it is not safe if we are using String methods and the a is number than runtime error will arrise
+//console.log(b.toUpperCase()) // Here it will show compile time error as the b is unknown and we can directly use the methods on it.
 
 //We can use after typeguarding the b
 if(typeof b === "string"){

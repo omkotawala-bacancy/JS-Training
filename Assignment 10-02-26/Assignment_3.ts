@@ -71,14 +71,14 @@ interface Employee {
 
 type merge = CEO | Employee
 
-function narrowing3(user: CEO | Employee) {
+function narrowing3(user: merge) {
     if (user.role === "CEO") {
         return `User has the role ${user.role} and access: ${user.access}`
     }
 }
 
 
-const user: CEO = {
+const user: merge = {
     role: "CEO",
     access: ["adminPanel", "everything"]
 }
