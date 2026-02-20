@@ -20,5 +20,6 @@ const newUser: AdminUser = {
     email: "om@gmail.com",
     role: "write"
 }
+// Here error will be there add the property isActive 
 
 
