@@ -7,7 +7,7 @@
 function format(x: number): string
 function format(x: Date): string
 
-function format(x: any){
+function format(x: number | Date){
     if(typeof x === 'number') return String(x)
 
     return x.toLocaleDateString()
