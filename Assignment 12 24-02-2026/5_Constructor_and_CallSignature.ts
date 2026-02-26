@@ -10,7 +10,7 @@ role: "ADMIN" | "CUSTOMER"
 isActive: boolean
 }
 
-type UserRepositoryConstructor<T> = new (...args: any[]) => T
+type UserRepositoryConstructor<T> = new (...args: infer P) => T
 
 abstract class BaseRepository<T> {
     abstract getById(id: string): T
