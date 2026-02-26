@@ -3,7 +3,7 @@
     Test it with a function that takes (id: string, active: boolean) .
 */
 
-type FirstArgument<T> = T extends (...args : any[]) => infer R ? R : never
+type FirstArgument<T> = T extends (...args : infer P) => infer R ? R : never
 
 function getname(name: string, age: number){
     return `Hello ${name} your age is ${age}`
