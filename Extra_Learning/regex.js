@@ -82,4 +82,4 @@ console.log(password);
 
 console.log(regex.test(password))
 
-// console.log(suggestPasword());
+console.log(suggestPasword());
