@@ -17,7 +17,7 @@ async function APIRetry(url, retry){
             counter--;
 
             if (counter === 0) {
-                throw new Error("Out of retries");
+                throw new Error(`Error: ${error.message}`);
             }
         }
     }
