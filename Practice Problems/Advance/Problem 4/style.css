@@ -1,0 +1,125 @@
+*{
+    margin: 0;
+    padding: 0;
+    
+}
+header{
+    color: white;
+    background-color: black;
+    font-size: 30px;
+    font-weight: bold;
+    display: flex;
+    justify-content: center;
+}
+.note{
+    margin-top: 50px;
+    padding: 20px;
+    display: flex;
+    flex-direction: column;
+    gap: 50px;
+    font: 20px solid;
+}
+
+#Add{
+    width: 100px;
+    height: 30px;
+}
+
+#notes{
+    display: flex;
+    flex-direction: row;
+    flex-wrap: wrap;
+    gap: 10px;
+    justify-content: flex-start;
+}
+
+.notes_div{
+    display: flex;
+    flex-direction: column;
+    flex-wrap: wrap;
+    justify-content: flex-start;
+    gap: 20px;
+    height: 200px;
+    width: 300px;
+    align-items: center;
+    border: 1px solid black;
+}
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+h1 {
+    padding: 10px;
+}
+.add-note-container {
+    padding: 20px;
+}
+
+.note-card {
+    padding: 20px;
+    /* width: 80%; */
+}
+
+.btn {
+    padding: 5px 8px;
+}
+
+.notes-description {
+    margin: 20px;
+    text-align: justify;
+}
+
+.note-title {
+    font-size: 20px;
+    font-weight: 700;
+}
+
+#add-notes-desc {
+    width: 350px;
+    height: 200px;
+}
+
+.modal {
+    height: 350px;
+    width: 400px;
+    background-color: white;
+}
+
+.modal-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 15px 30px;
+}
+
+#modal-container {
+    position: fixed;
+    inset: 0;
+    background: rgba(0, 0, 0, 0.3);
+    align-items: center;
+    justify-content: center;
+    display: none;
+}
+#close-span {
+    cursor: pointer;
+    width: 20px;
+    height: 20px;
+}
+.modal-body {
+    padding: 15px 30px;
+    display: flex;
+    gap:10px;
+    flex-direction: column;
+}
+.modal-input {
+    height: 100px;
+}
+.modal-footer {
+    padding: 15px 30px;
+}
+.modal-footer button {
+    padding: 10px;
+}

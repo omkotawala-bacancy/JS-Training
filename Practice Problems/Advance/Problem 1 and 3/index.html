@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>charset</title>
+    <style>
+        .header{
+            display: flex;
+            flex-direction: row;
+            justify-content: flex-start;
+            gap: 50px;
+        }
+        #producList{
+            list-style: none;
+        }
+        #total{
+            width: 100px;
+            height: 50px;
+            margin-top: 50px;
+            align-content: center;
+        }
+        ul{
+            display:flex;
+            flex-wrap: wrap;
+            list-style: none;
+            justify-content: flex-start;
+            
+        }
+        div{
+            flex-direction: column;
+        }
+        ul li{
+            border: 1px solid black;
+            padding: 10px;
+            margin: 10px;
+            height: 350px;
+            width: 300px;
+        }
+    </style>
+</head>
+<body>
+    <div class="header">
+        <label for="search">Search :</label>
+        <input type="text" name="" id="search" placeholder="Search product">
+
+        <select name="filter" id="filter">
+            <option value="0">Default</option>
+            <option value="1">0 - 20</option>
+            <option value="2">20 - 40</option>
+            <option value="3">40 - 60</option>
+            <option value="4">60 - 80</option>
+            <option value="5">80 - 100</option>
+        </select>
+
+        <Button id="sort">Sort by Name</Button>
+    </div>
+
+    <h1>Products</h1>
+    <ul id="productList"></ul><br><br><br>
+
+    <h1>Cart</h1>
+    <ul id="cartList"></ul>
+
+    <button id="total">Total</button>
+
+    <button id="clear">Clear Cart</button>
+    
+</body>
+<script src="shoppingCart.js"></script>
+</html>
