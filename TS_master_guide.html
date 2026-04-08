@@ -1,0 +1,1025 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>TypeScript Mastery Guide</title>
+<style>
+@import url('https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500&family=DM+Sans:wght@400;500;700&display=swap');
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:'DM Sans',sans-serif;background:#060A14;color:#E2E8F0;min-height:100vh}
+
+/* ── Header ── */
+.header{padding:3rem 2rem 1.5rem;background:linear-gradient(135deg,#060A14 0%,#0D1B3E 100%);border-bottom:1px solid #1a2744}
+.header-inner{max-width:880px;margin:0 auto}
+.ts-badge{display:inline-block;background:#3178C6;color:#fff;font-size:11px;font-weight:700;padding:3px 10px;border-radius:4px;letter-spacing:.5px;margin-bottom:12px}
+.header h1{font-size:38px;font-weight:700;letter-spacing:-1.5px;line-height:1.1}
+.header h1 .accent{color:#3178C6}
+.header h1 .accent2{color:#60A5FA}
+.header p{font-size:15px;color:#4A6FA5;margin-top:8px}
+
+/* ── Chapter Nav ── */
+.chapters{background:#060A14;border-bottom:1px solid #1a2744;position:sticky;top:0;z-index:20;padding:.75rem 2rem;overflow-x:auto;white-space:nowrap}
+.chapters::-webkit-scrollbar{height:3px}.chapters::-webkit-scrollbar-thumb{background:#1a2744}
+.ch-btn{display:inline-block;font-family:'DM Sans',sans-serif;font-size:12px;padding:6px 14px;border-radius:6px;border:1px solid #1a2744;background:transparent;color:#4A6FA5;cursor:pointer;transition:all .2s;margin-right:6px;white-space:nowrap}
+.ch-btn.active{background:#3178C6;border-color:#3178C6;color:#fff;font-weight:700}
+.ch-btn:hover:not(.active){border-color:#3178C6;color:#60A5FA}
+.progress-bar{height:2px;background:#1a2744}
+.progress-fill{height:100%;background:linear-gradient(90deg,#3178C6,#60A5FA);transition:width .4s}
+
+/* ── Content ── */
+.content{max-width:880px;margin:0 auto;padding:2rem}
+.section{display:none}.section.active{display:block}
+.sec-title{font-size:30px;font-weight:700;letter-spacing:-1px;margin-bottom:6px}
+.sec-sub{font-size:15px;color:#4A6FA5;margin-bottom:2rem;line-height:1.7}
+
+/* ── Callout boxes ── */
+.theory{background:#0D1B3E;border-left:3px solid #3178C6;border-radius:0 10px 10px 0;padding:1.25rem 1.5rem;margin-bottom:1.5rem;font-size:14px;line-height:1.9;color:#7B9CC8}
+.theory strong{color:#E2E8F0;font-weight:500}
+.key{display:inline-block;background:#0F2957;color:#60A5FA;font-size:11px;padding:2px 8px;border-radius:5px;margin:0 2px;font-family:'JetBrains Mono',monospace;border:1px solid #1a4080}
+.tip{background:#081A12;border-left:3px solid #10B981;border-radius:0 10px 10px 0;padding:.9rem 1.25rem;margin-bottom:1.25rem;font-size:13px;color:#6EE7B7;line-height:1.8}
+.tip::before{content:"💡 Senior tip: ";font-weight:700;color:#10B981}
+.warn{background:#1A0D08;border-left:3px solid #F97316;border-radius:0 10px 10px 0;padding:.9rem 1.25rem;margin-bottom:1.25rem;font-size:13px;color:#FDBA74;line-height:1.8}
+.warn::before{content:"⚠ Gotcha: ";font-weight:700;color:#F97316}
+.danger{background:#1A0808;border-left:3px solid #EF4444;border-radius:0 10px 10px 0;padding:.9rem 1.25rem;margin-bottom:1.25rem;font-size:13px;color:#FCA5A5;line-height:1.8}
+.danger::before{content:"🚫 Never do this: ";font-weight:700;color:#EF4444}
+
+/* ── Code ── */
+.code-label{font-size:11px;font-weight:700;color:#2D4A7A;letter-spacing:.6px;text-transform:uppercase;margin-bottom:6px;padding:0 4px}
+pre{background:#020812;border:1px solid #1a2744;border-radius:10px;padding:1.25rem 1.5rem;overflow-x:auto;font-family:'JetBrains Mono',monospace;font-size:12.5px;line-height:1.9;margin-bottom:1.5rem}
+.c-kw{color:#C084FC}.c-str{color:#86EFAC}.c-num{color:#FCA5A5}.c-cm{color:#2D4A7A;font-style:italic}
+.c-fn{color:#67E8F9}.c-op{color:#FCD34D}.c-var{color:#E2E8F0}.c-ty{color:#60A5FA}
+.c-dec{color:#F472B6}.c-bool{color:#FB923C}
+
+/* ── Comparison grids ── */
+.cmp-grid{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin:1rem 0 1.5rem}
+.cmp-card{background:#0D1B3E;border:1px solid #1a2744;border-radius:10px;padding:1rem 1.25rem}
+.cmp-card .cmp-title{font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.5px;margin-bottom:10px}
+.cmp-card.bad .cmp-title{color:#EF4444}.cmp-card.good .cmp-title{color:#10B981}
+.cmp-card.bad{border-color:#2D1515}.cmp-card.good{border-color:#0F2A1A}
+
+/* ── Feature grid ── */
+.feat-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:10px;margin:1.5rem 0}
+.feat-card{background:#0D1B3E;border:1px solid #1a2744;border-radius:10px;padding:1rem 1.25rem}
+.feat-card .ft{font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.5px;color:#2D4A7A;margin-bottom:6px}
+.feat-card .fv{font-family:'JetBrains Mono',monospace;font-size:13px;color:#60A5FA;margin-bottom:4px}
+.feat-card .fd{font-size:12px;color:#4A6FA5;line-height:1.5}
+
+/* ── Type table ── */
+.type-table{width:100%;border-collapse:collapse;font-size:13px;margin:1.5rem 0}
+.type-table th{padding:10px 14px;background:#0D1B3E;font-weight:700;font-size:11px;text-transform:uppercase;letter-spacing:.4px;color:#2D4A7A;text-align:left;border-bottom:1px solid #1a2744}
+.type-table td{padding:10px 14px;border-bottom:1px solid #0D1B3E;font-family:'JetBrains Mono',monospace;font-size:12px;vertical-align:top;line-height:1.6}
+.type-table td:first-child{color:#60A5FA;font-family:'DM Sans',sans-serif;font-size:13px;font-weight:500}
+.badge{display:inline-block;font-size:10px;padding:3px 10px;border-radius:5px;font-family:'DM Sans',sans-serif;font-weight:700}
+.badge.blue{background:rgba(49,120,198,.15);color:#60A5FA}
+.badge.green{background:rgba(16,185,129,.15);color:#10B981}
+.badge.orange{background:rgba(249,115,22,.15);color:#F97316}
+.badge.purple{background:rgba(192,132,252,.15);color:#C084FC}
+.badge.red{background:rgba(239,68,68,.15);color:#EF4444}
+
+/* ── Utility types showcase ── */
+.ut-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(180px,1fr));gap:10px;margin:1.5rem 0}
+.ut-card{background:#0D1B3E;border:1px solid #1a2744;border-radius:10px;padding:.9rem 1.1rem}
+.ut-name{font-family:'JetBrains Mono',monospace;font-size:13px;color:#C084FC;margin-bottom:4px;font-weight:500}
+.ut-desc{font-size:12px;color:#4A6FA5;line-height:1.5;margin-bottom:8px}
+.ut-ex{font-family:'JetBrains Mono',monospace;font-size:11px;color:#60A5FA;background:#020812;border-radius:5px;padding:5px 8px;border:1px solid #1a2744}
+
+/* ── Narrowing steps ── */
+.steps{counter-reset:step;margin:1rem 0 1.5rem}
+.step-item{display:flex;gap:12px;margin-bottom:12px;counter-increment:step}
+.step-num{min-width:28px;height:28px;border-radius:50%;background:#3178C6;color:#fff;font-size:12px;font-weight:700;display:flex;align-items:center;justify-content:center;flex-shrink:0;margin-top:2px}
+.step-body{flex:1}
+.step-title{font-weight:500;font-size:14px;margin-bottom:3px}
+.step-desc{font-size:13px;color:#4A6FA5;line-height:1.6}
+
+/* ── Nav ── */
+.nav-row{display:flex;gap:8px;margin-top:2.5rem;padding-top:1.5rem;border-top:1px solid #1a2744}
+.nav-btn{flex:1;font-family:'DM Sans',sans-serif;font-size:13px;padding:12px;border-radius:8px;border:1px solid #1a2744;background:transparent;color:#E2E8F0;cursor:pointer;transition:all .2s}
+.nav-btn:hover{border-color:#3178C6;color:#60A5FA}
+.nav-btn.primary{background:#3178C6;border-color:#3178C6;color:#fff;font-weight:700}
+.nav-btn.primary:hover{background:#2563EB;border-color:#2563EB;color:#fff}
+
+/* ── Responsive ── */
+@media(max-width:600px){.cmp-grid{grid-template-columns:1fr}.header h1{font-size:28px}}
+</style>
+</head>
+<body>
+
+<div class="header">
+  <div class="header-inner">
+    <div class="ts-badge">TypeScript</div>
+    <h1>TypeScript <span class="accent">Mastery</span> <span class="accent2">Guide</span></h1>
+    <p>From JavaScript to type-safe code — every important concept explained with theory, code & gotchas</p>
+  </div>
+</div>
+
+<div class="chapters" id="chapters">
+  <button class="ch-btn active"  onclick="goto(0)">Why TypeScript</button>
+  <button class="ch-btn"         onclick="goto(1)">Basic Types</button>
+  <button class="ch-btn"         onclick="goto(2)">Interfaces vs Types</button>
+  <button class="ch-btn"         onclick="goto(3)">Generics</button>
+  <button class="ch-btn"         onclick="goto(4)">Type Narrowing</button>
+  <button class="ch-btn"         onclick="goto(5)">Utility Types</button>
+  <button class="ch-btn"         onclick="goto(6)">Enums & Literals</button>
+  <button class="ch-btn"         onclick="goto(7)">Classes & OOP</button>
+  <button class="ch-btn"         onclick="goto(8)">Advanced Types</button>
+  <button class="ch-btn"         onclick="goto(9)">TS with React</button>
+</div>
+<div class="progress-bar"><div class="progress-fill" id="prog" style="width:10%"></div></div>
+
+<div class="content">
+
+<!-- ══════════════════════════════════════════
+     0 — WHY TYPESCRIPT
+══════════════════════════════════════════ -->
+<div class="section active" id="s0">
+<div class="sec-title">Why TypeScript?</div>
+<div class="sec-sub">TypeScript is JavaScript with a type system bolted on top. It compiles away to plain JS. But before it compiles, it catches entire classes of bugs that JavaScript silently lets through at runtime.</div>
+
+<div class="theory">
+  TypeScript is a <strong>statically typed superset of JavaScript</strong> — every valid JS file is a valid TS file. At its core, TypeScript adds a <strong>compilation step</strong> that analyses your code for type errors <em>before</em> it runs. This means bugs that would crash your users' browsers at 2 AM are instead caught at your keyboard at 2 PM.<br><br>
+  The three things TS gives you that JS doesn't:<br>
+  <strong>1. Static analysis</strong> — the compiler knows the shape of every value at every point.<br>
+  <strong>2. Self-documenting code</strong> — type annotations are documentation that never goes out of date.<br>
+  <strong>3. Fearless refactoring</strong> — rename a field and the compiler tells you every single place that breaks.
+</div>
+
+<div class="code-label">The classic JavaScript runtime bug TypeScript prevents at compile time</div>
+<pre><span class="c-cm">// ━━ JavaScript ━━ This runs. Then it crashes at runtime.</span>
+<span class="c-kw">function</span> <span class="c-fn">getUser</span>(<span class="c-var">id</span>) {
+  <span class="c-kw">return</span> { name: <span class="c-str">'Arjun'</span>, age: <span class="c-num">28</span> };
+}
+
+<span class="c-kw">const</span> <span class="c-var">user</span> <span class="c-op">=</span> <span class="c-fn">getUser</span>(<span class="c-num">1</span>);
+<span class="c-fn">console</span>.<span class="c-fn">log</span>(<span class="c-var">user</span>.adress.city); <span class="c-cm">// typo: 'adress' → runtime crash</span>
+<span class="c-cm">// TypeError: Cannot read properties of undefined (reading 'city')</span>
+<span class="c-cm">// This crashes in production. Your users see a broken screen.</span>
+
+<span class="c-cm">// ━━ TypeScript ━━ Caught immediately in your editor.</span>
+<span class="c-kw">interface</span> <span class="c-ty">User</span> {
+  name: <span class="c-ty">string</span>;
+  age:  <span class="c-ty">number</span>;
+}
+
+<span class="c-kw">function</span> <span class="c-fn">getUser</span>(<span class="c-var">id</span>: <span class="c-ty">number</span>): <span class="c-ty">User</span> {
+  <span class="c-kw">return</span> { name: <span class="c-str">'Arjun'</span>, age: <span class="c-num">28</span> };
+}
+
+<span class="c-kw">const</span> <span class="c-var">user</span> = <span class="c-fn">getUser</span>(<span class="c-num">1</span>);
+<span class="c-var">user</span>.adress; <span class="c-cm">// ❌ Compile error: Property 'adress' does not exist</span>
+<span class="c-cm">// on type 'User'. Did you mean 'address'?</span>
+<span class="c-cm">// Fixed before it ever ships.</span></pre>
+
+<div class="cmp-grid">
+  <div class="cmp-card bad">
+    <div class="cmp-title">❌ JavaScript</div>
+    <ul style="font-size:13px;color:#FCA5A5;line-height:2;padding-left:16px">
+      <li>Bugs found at runtime (production)</li>
+      <li>No autocomplete for object shapes</li>
+      <li>Refactoring is a game of grep</li>
+      <li>Function params — trust the caller</li>
+      <li>null/undefined errors are common</li>
+    </ul>
+  </div>
+  <div class="cmp-card good">
+    <div class="cmp-title">✅ TypeScript</div>
+    <ul style="font-size:13px;color:#6EE7B7;line-height:2;padding-left:16px">
+      <li>Bugs found at compile time (dev)</li>
+      <li>Full IntelliSense autocomplete</li>
+      <li>Refactor with confidence</li>
+      <li>Function contracts are enforced</li>
+      <li>Strict null checks built in</li>
+    </ul>
+  </div>
+</div>
+
+<div class="code-label">TypeScript is a strict mode for your brain — tsconfig.json essentials</div>
+<pre><span class="c-cm">// tsconfig.json — always enable these in new projects</span>
+{
+  <span class="c-str">"compilerOptions"</span>: {
+    <span class="c-str">"strict"</span>: <span class="c-bool">true</span>,          <span class="c-cm">// enables all strict checks below</span>
+    <span class="c-cm">// which includes:</span>
+    <span class="c-str">"noImplicitAny"</span>: <span class="c-bool">true</span>,    <span class="c-cm">// no untyped variables allowed</span>
+    <span class="c-str">"strictNullChecks"</span>: <span class="c-bool">true</span>, <span class="c-cm">// null/undefined are their own types</span>
+    <span class="c-str">"strictFunctionTypes"</span>: <span class="c-bool">true</span>,
+
+    <span class="c-str">"target"</span>: <span class="c-str">"ES2020"</span>,        <span class="c-cm">// output JS version</span>
+    <span class="c-str">"module"</span>: <span class="c-str">"commonjs"</span>,
+    <span class="c-str">"outDir"</span>: <span class="c-str">"./dist"</span>,
+    <span class="c-str">"rootDir"</span>: <span class="c-str">"./src"</span>
+  }
+}</pre>
+
+<div class="tip">Always enable "strict": true from day one. Retrofitting strict mode onto an existing JS codebase is painful — you'll inherit 500 type errors. Start strict. It feels restrictive for the first week and then you'll never want to code without it.</div>
+<div class="nav-row"><button class="nav-btn primary" onclick="goto(1)">Next: Basic Types →</button></div>
+</div>
+
+<!-- ══════════════════════════════════════════
+     1 — BASIC TYPES
+══════════════════════════════════════════ -->
+<div class="section" id="s1">
+<div class="sec-title">Basic Types</div>
+<div class="sec-sub">TypeScript's type system starts with primitives you already know from JavaScript, then adds powerful tools for annotating variables, functions, arrays, and objects.</div>
+
+<div class="theory">
+  In TypeScript, every value has a type. You can annotate types explicitly, or let TypeScript <strong>infer</strong> them automatically. Type inference is one of TS's most powerful features — you don't need to annotate everything, only where inference can't figure it out.<br><br>
+  The most important distinction to internalize: <span class="key">string</span> vs <span class="key">String</span>. Lowercase = primitive type (what you almost always want). Uppercase = JavaScript wrapper object class (almost never what you want). Same for <span class="key">number</span> vs <span class="key">Number</span>, <span class="key">boolean</span> vs <span class="key">Boolean</span>.
+</div>
+
+<table class="type-table">
+  <thead><tr><th>Type</th><th>Example annotation</th><th>Notes</th></tr></thead>
+  <tbody>
+    <tr><td>string</td><td><code style="color:#86EFAC">let name: string = 'Arjun'</code></td><td style="color:#4A6FA5">Always lowercase. Uppercase String is the JS wrapper class.</td></tr>
+    <tr><td>number</td><td><code style="color:#86EFAC">let age: number = 28</code></td><td style="color:#4A6FA5">All numbers — int, float, hex, binary, octal.</td></tr>
+    <tr><td>boolean</td><td><code style="color:#86EFAC">let active: boolean = true</code></td><td style="color:#4A6FA5">Only true/false. Not truthy/falsy values.</td></tr>
+    <tr><td>any</td><td><code style="color:#FCA5A5">let x: any = 'anything'</code></td><td style="color:#F97316">Escape hatch. Turns off type checking. Use sparingly or never.</td></tr>
+    <tr><td>unknown</td><td><code style="color:#86EFAC">let x: unknown = getData()</code></td><td style="color:#4A6FA5">Like any, but safe — must narrow before use.</td></tr>
+    <tr><td>never</td><td><code style="color:#86EFAC">function throw(): never</code></td><td style="color:#4A6FA5">Function that never returns (throws or infinite loops).</td></tr>
+    <tr><td>void</td><td><code style="color:#86EFAC">function log(): void</code></td><td style="color:#4A6FA5">Function that returns nothing useful (no return value).</td></tr>
+    <tr><td>null / undefined</td><td><code style="color:#86EFAC">let x: null = null</code></td><td style="color:#4A6FA5">With strictNullChecks on, these are their own types.</td></tr>
+    <tr><td>tuple</td><td><code style="color:#86EFAC">let t: [string, number]</code></td><td style="color:#4A6FA5">Fixed-length array with known types at each index.</td></tr>
+  </tbody>
+</table>
+
+<div class="code-label">Type inference — let TypeScript do the heavy lifting</div>
+<pre><span class="c-cm">// TypeScript infers the type from the initial value</span>
+<span class="c-kw">let</span> <span class="c-var">name</span> = <span class="c-str">'Arjun'</span>;   <span class="c-cm">// inferred: string — no annotation needed</span>
+<span class="c-kw">let</span> <span class="c-var">age</span>  = <span class="c-num">28</span>;       <span class="c-cm">// inferred: number</span>
+<span class="c-kw">let</span> <span class="c-var">done</span> = <span class="c-bool">false</span>;    <span class="c-cm">// inferred: boolean</span>
+
+<span class="c-cm">// Only annotate when inference can't figure it out</span>
+<span class="c-kw">let</span> <span class="c-var">items</span>: <span class="c-ty">string</span>[] = [];   <span class="c-cm">// must tell TS what the array holds</span>
+<span class="c-kw">let</span> <span class="c-var">data</span>: <span class="c-ty">User</span> | <span class="c-ty">null</span> = <span class="c-kw">null</span>; <span class="c-cm">// union — can be User or null</span>
+
+<span class="c-cm">// Arrays — two equivalent syntaxes</span>
+<span class="c-kw">const</span> <span class="c-var">nums1</span>: <span class="c-ty">number</span>[]       = [<span class="c-num">1</span>, <span class="c-num">2</span>, <span class="c-num">3</span>]; <span class="c-cm">// preferred style</span>
+<span class="c-kw">const</span> <span class="c-var">nums2</span>: <span class="c-ty">Array</span>&lt;<span class="c-ty">number</span>&gt;  = [<span class="c-num">1</span>, <span class="c-num">2</span>, <span class="c-num">3</span>]; <span class="c-cm">// generic style</span>
+
+<span class="c-cm">// Tuples — fixed position, fixed types</span>
+<span class="c-kw">const</span> <span class="c-var">point</span>:   [<span class="c-ty">number</span>, <span class="c-ty">number</span>]          = [<span class="c-num">10</span>, <span class="c-num">20</span>];
+<span class="c-kw">const</span> <span class="c-var">record</span>:  [<span class="c-ty">string</span>, <span class="c-ty">number</span>, <span class="c-ty">boolean</span>] = [<span class="c-str">'Arjun'</span>, <span class="c-num">28</span>, <span class="c-bool">true</span>];
+<span class="c-kw">const</span> [<span class="c-var">uname</span>, <span class="c-var">uage</span>] = <span class="c-var">record</span>; <span class="c-cm">// destructure with correct types!</span></pre>
+
+<div class="code-label">Function typing — annotate params and return type</div>
+<pre><span class="c-cm">// Always annotate function parameters — TS can't infer those</span>
+<span class="c-cm">// Return type is often inferred but annotating is explicit documentation</span>
+<span class="c-kw">function</span> <span class="c-fn">add</span>(<span class="c-var">a</span>: <span class="c-ty">number</span>, <span class="c-var">b</span>: <span class="c-ty">number</span>): <span class="c-ty">number</span> {
+  <span class="c-kw">return</span> <span class="c-var">a</span> <span class="c-op">+</span> <span class="c-var">b</span>;
+}
+
+<span class="c-cm">// Optional params with ?, default values</span>
+<span class="c-kw">function</span> <span class="c-fn">greet</span>(<span class="c-var">name</span>: <span class="c-ty">string</span>, <span class="c-var">greeting</span>?: <span class="c-ty">string</span>): <span class="c-ty">string</span> {
+  <span class="c-kw">return</span> <span class="c-str">`${greeting ?? 'Hello'}, ${name}!`</span>;
+}
+
+<span class="c-cm">// Rest params</span>
+<span class="c-kw">function</span> <span class="c-fn">sum</span>(...<span class="c-var">nums</span>: <span class="c-ty">number</span>[]): <span class="c-ty">number</span> {
+  <span class="c-kw">return</span> <span class="c-var">nums</span>.<span class="c-fn">reduce</span>((<span class="c-var">a</span>, <span class="c-var">b</span>) <span class="c-op">=></span> <span class="c-var">a</span> <span class="c-op">+</span> <span class="c-var">b</span>, <span class="c-num">0</span>);
+}
+
+<span class="c-cm">// Function type annotation (for callbacks / HOFs)</span>
+<span class="c-kw">type</span> <span class="c-ty">Transformer</span> = (<span class="c-var">input</span>: <span class="c-ty">string</span>) <span class="c-op">=></span> <span class="c-ty">string</span>;
+<span class="c-kw">const</span> <span class="c-var">upper</span>: <span class="c-ty">Transformer</span> = (<span class="c-var">s</span>) <span class="c-op">=></span> <span class="c-var">s</span>.<span class="c-fn">toUpperCase</span>();</pre>
+
+<div class="code-label">any vs unknown — the crucial difference</div>
+<pre><span class="c-cm">// any — turns off ALL type checking. The escape hatch.</span>
+<span class="c-kw">let</span> <span class="c-var">x</span>: <span class="c-ty">any</span> = <span class="c-fn">getFromExternalAPI</span>();
+<span class="c-var">x</span>.<span class="c-fn">nonExistentMethod</span>(); <span class="c-cm">// ✓ TypeScript says OK — runtime crash!</span>
+<span class="c-var">x</span>.foo.bar.baz;          <span class="c-cm">// ✓ TypeScript says OK — runtime crash!</span>
+
+<span class="c-cm">// unknown — type-safe alternative to any</span>
+<span class="c-cm">// You MUST narrow the type before you can use it</span>
+<span class="c-kw">let</span> <span class="c-var">y</span>: <span class="c-ty">unknown</span> = <span class="c-fn">getFromExternalAPI</span>();
+<span class="c-var">y</span>.<span class="c-fn">nonExistentMethod</span>(); <span class="c-cm">// ❌ Error: Object is of type 'unknown'</span>
+
+<span class="c-cm">// To use it, narrow first:</span>
+<span class="c-kw">if</span> (<span class="c-kw">typeof</span> <span class="c-var">y</span> === <span class="c-str">'string'</span>) {
+  <span class="c-var">y</span>.<span class="c-fn">toUpperCase</span>(); <span class="c-cm">// ✓ Now TS knows it's a string</span>
+}</pre>
+
+<div class="danger">Never use <code>any</code> as a default. any is a type-safety hole — it propagates and infects surrounding code. Use <code>unknown</code> for truly unknown external data, then narrow it. If you're using any frequently, your TypeScript is just JavaScript with extra steps.</div>
+<div class="nav-row"><button class="nav-btn" onclick="goto(0)">← Why TypeScript</button><button class="nav-btn primary" onclick="goto(2)">Next: Interfaces vs Types →</button></div>
+</div>
+
+<!-- ══════════════════════════════════════════
+     2 — INTERFACES vs TYPES
+══════════════════════════════════════════ -->
+<div class="section" id="s2">
+<div class="sec-title">Interfaces vs Type Aliases</div>
+<div class="sec-sub">Both define the shape of an object. There are real differences, and the TypeScript team has strong opinions on when to use which. Let's clear this up definitively.</div>
+
+<div class="theory">
+  <span class="key">interface</span> and <span class="key">type</span> are the two ways to name and reuse a type shape. They look almost identical and most of the time are interchangeable. But there are key differences:<br><br>
+  <strong>interface</strong>: Can be extended with <code>extends</code>. Can be merged (declaration merging — same name, different file = merged shape). Best for defining object shapes and class contracts. This is <em>the official TS team recommendation for objects</em>.<br><br>
+  <strong>type alias</strong>: Can do everything interface can, PLUS it can represent unions (<code>A | B</code>), intersections (<code>A & B</code>), primitives, tuples, and mapped types. More powerful, more flexible. Use type when you need those extra features.
+</div>
+
+<div class="code-label">Interface — the standard for object shapes</div>
+<pre><span class="c-kw">interface</span> <span class="c-ty">User</span> {
+  <span class="c-kw">readonly</span> id:   <span class="c-ty">number</span>;    <span class="c-cm">// readonly — can't reassign after creation</span>
+  name:            <span class="c-ty">string</span>;
+  email:           <span class="c-ty">string</span>;
+  age?:            <span class="c-ty">number</span>;   <span class="c-cm">// optional property</span>
+  avatar:          <span class="c-ty">string</span> | <span class="c-ty">null</span>; <span class="c-cm">// can be string or null</span>
+}
+
+<span class="c-cm">// Extending — building on top of existing interfaces</span>
+<span class="c-kw">interface</span> <span class="c-ty">AdminUser</span> <span class="c-kw">extends</span> <span class="c-ty">User</span> {
+  role:        <span class="c-str">'admin'</span> | <span class="c-str">'superadmin'</span>;
+  permissions: <span class="c-ty">string</span>[];
+}
+
+<span class="c-cm">// Declaration merging — unique to interface!</span>
+<span class="c-cm">// If you declare the same interface name twice, TS merges them</span>
+<span class="c-kw">interface</span> <span class="c-ty">Window</span> {
+  myCustomProperty: <span class="c-ty">string</span>; <span class="c-cm">// adds to the global Window type</span>
+}
+<span class="c-cm">// This is how you extend third-party types (like Express Request)</span></pre>
+
+<div class="code-label">Type alias — needed for unions, primitives, mapped types</div>
+<pre><span class="c-cm">// Union types — ONLY possible with type alias</span>
+<span class="c-kw">type</span> <span class="c-ty">Status</span>    = <span class="c-str">'active'</span> | <span class="c-str">'inactive'</span> | <span class="c-str">'pending'</span>;
+<span class="c-kw">type</span> <span class="c-ty">ID</span>        = <span class="c-ty">string</span> | <span class="c-ty">number</span>;
+<span class="c-kw">type</span> <span class="c-ty">Nullable</span>&lt;<span class="c-ty">T</span>&gt; = <span class="c-ty">T</span> | <span class="c-ty">null</span>;
+
+<span class="c-cm">// Intersection types — combine multiple types</span>
+<span class="c-kw">type</span> <span class="c-ty">AdminUser</span> = <span class="c-ty">User</span> & { role: <span class="c-ty">string</span>; permissions: <span class="c-ty">string</span>[] };
+
+<span class="c-cm">// Discriminated union — the most powerful pattern in TypeScript</span>
+<span class="c-kw">type</span> <span class="c-ty">ApiResponse</span>&lt;<span class="c-ty">T</span>&gt; =
+  | { status: <span class="c-str">'success'</span>; data: <span class="c-ty">T</span> }
+  | { status: <span class="c-str">'error'</span>;   error: <span class="c-ty">string</span>; code: <span class="c-ty">number</span> }
+  | { status: <span class="c-str">'loading'</span> };
+
+<span class="c-kw">function</span> <span class="c-fn">handle</span>&lt;<span class="c-ty">T</span>&gt;(<span class="c-var">res</span>: <span class="c-ty">ApiResponse</span>&lt;<span class="c-ty">T</span>&gt;) {
+  <span class="c-kw">switch</span> (<span class="c-var">res</span>.status) {
+    <span class="c-kw">case</span> <span class="c-str">'success'</span>: <span class="c-kw">return</span> <span class="c-fn">render</span>(<span class="c-var">res</span>.data);   <span class="c-cm">// res.data is T here</span>
+    <span class="c-kw">case</span> <span class="c-str">'error'</span>:   <span class="c-kw">return</span> <span class="c-fn">showError</span>(<span class="c-var">res</span>.error); <span class="c-cm">// res.error is string</span>
+    <span class="c-kw">case</span> <span class="c-str">'loading'</span>: <span class="c-kw">return</span> <span class="c-fn">showSpinner</span>();
+  }
+}</pre>
+
+<div class="code-label">Index signatures — for dynamic key-value shapes</div>
+<pre><span class="c-cm">// When you don't know the property names upfront</span>
+<span class="c-kw">interface</span> <span class="c-ty">StringMap</span> {
+  [key: <span class="c-ty">string</span>]: <span class="c-ty">string</span>; <span class="c-cm">// any string key, string value</span>
+}
+
+<span class="c-kw">interface</span> <span class="c-ty">Config</span> {
+  name:   <span class="c-ty">string</span>;     <span class="c-cm">// known property</span>
+  [key: <span class="c-ty">string</span>]: <span class="c-ty">unknown</span>; <span class="c-cm">// plus any other properties</span>
+}
+
+<span class="c-cm">// Record&lt;K, V&gt; utility type is cleaner for this (covered in Utility Types)</span>
+<span class="c-kw">type</span> <span class="c-ty">Scores</span>   = <span class="c-ty">Record</span>&lt;<span class="c-ty">string</span>, <span class="c-ty">number</span>&gt;;
+<span class="c-kw">type</span> <span class="c-ty">UserMap</span>  = <span class="c-ty">Record</span>&lt;<span class="c-ty">string</span>, <span class="c-ty">User</span>&gt;;</pre>
+
+<div class="feat-grid">
+  <div class="feat-card"><div class="ft">Use interface when</div><div class="fd" style="color:#6EE7B7">Defining object/class shapes, need extends, augmenting library types, writing OOP code</div></div>
+  <div class="feat-card"><div class="ft">Use type when</div><div class="fd" style="color:#60A5FA">Need unions (A|B), intersections (A&B), mapped types, conditional types, or aliasing primitives</div></div>
+  <div class="feat-card"><div class="ft">Key difference</div><div class="fd" style="color:#FDBA74">Interfaces can be merged (declared twice). Type aliases cannot — redeclaring is an error.</div></div>
+</div>
+
+<div class="tip">The TypeScript team recommendation: use interface for objects/classes, use type for everything else. In practice, many senior devs use type for everything — it's more consistent and flexible. Pick one convention and stick to it across your codebase.</div>
+<div class="nav-row"><button class="nav-btn" onclick="goto(1)">← Basic Types</button><button class="nav-btn primary" onclick="goto(3)">Next: Generics →</button></div>
+</div>
+
+<!-- ══════════════════════════════════════════
+     3 — GENERICS
+══════════════════════════════════════════ -->
+<div class="section" id="s3">
+<div class="sec-title">Generics</div>
+<div class="sec-sub">Generics let you write functions, classes, and types that work with any type — while still preserving full type safety. They're the key to reusable, type-safe code.</div>
+
+<div class="theory">
+  Imagine writing a function that returns the first element of an array. In JavaScript you'd write it once. In naive TypeScript, you'd write it for every type: <code>getFirstString(arr: string[])</code>, <code>getFirstNumber(arr: number[])</code>... forever. Generics solve this. They're like <strong>type-level variables</strong> — a placeholder for a type that gets filled in when the function is called.<br><br>
+  The syntax <span class="key">&lt;T&gt;</span> declares a type parameter. <code>T</code> is convention (Type), but you'll also see <code>K</code> (Key), <code>V</code> (Value), <code>E</code> (Element), <code>TData</code>, etc. When TypeScript calls the function, it <strong>infers</strong> what T is from the arguments — you rarely need to pass it explicitly.
+</div>
+
+<div class="code-label">Generic functions — write once, type-safe for everything</div>
+<pre><span class="c-cm">// Without generics — duplicated for each type</span>
+<span class="c-kw">function</span> <span class="c-fn">getFirstString</span>(<span class="c-var">arr</span>: <span class="c-ty">string</span>[]): <span class="c-ty">string</span> | <span class="c-ty">undefined</span> { <span class="c-kw">return</span> <span class="c-var">arr</span>[<span class="c-num">0</span>]; }
+<span class="c-kw">function</span> <span class="c-fn">getFirstNumber</span>(<span class="c-var">arr</span>: <span class="c-ty">number</span>[]): <span class="c-ty">number</span> | <span class="c-ty">undefined</span> { <span class="c-kw">return</span> <span class="c-var">arr</span>[<span class="c-num">0</span>]; }
+<span class="c-cm">// This is horrible. With generics:</span>
+
+<span class="c-cm">// T is a type variable — filled in at call time</span>
+<span class="c-kw">function</span> <span class="c-fn">getFirst</span>&lt;<span class="c-ty">T</span>&gt;(<span class="c-var">arr</span>: <span class="c-ty">T</span>[]): <span class="c-ty">T</span> | <span class="c-ty">undefined</span> {
+  <span class="c-kw">return</span> <span class="c-var">arr</span>[<span class="c-num">0</span>];
+}
+
+<span class="c-kw">const</span> <span class="c-var">s</span> = <span class="c-fn">getFirst</span>([<span class="c-str">'a'</span>, <span class="c-str">'b'</span>, <span class="c-str">'c'</span>]); <span class="c-cm">// T inferred as string → s: string|undefined</span>
+<span class="c-kw">const</span> <span class="c-var">n</span> = <span class="c-fn">getFirst</span>([<span class="c-num">1</span>, <span class="c-num">2</span>, <span class="c-num">3</span>]);        <span class="c-cm">// T inferred as number → n: number|undefined</span>
+<span class="c-kw">const</span> <span class="c-var">u</span> = <span class="c-fn">getFirst</span>([{ id: <span class="c-num">1</span> }]);      <span class="c-cm">// T inferred as {id:number} ← even objects!</span>
+
+<span class="c-cm">// Multiple type parameters</span>
+<span class="c-kw">function</span> <span class="c-fn">pair</span>&lt;<span class="c-ty">A</span>, <span class="c-ty">B</span>&gt;(<span class="c-var">a</span>: <span class="c-ty">A</span>, <span class="c-var">b</span>: <span class="c-ty">B</span>): [<span class="c-ty">A</span>, <span class="c-ty">B</span>] {
+  <span class="c-kw">return</span> [<span class="c-var">a</span>, <span class="c-var">b</span>];
+}
+<span class="c-kw">const</span> <span class="c-var">p</span> = <span class="c-fn">pair</span>(<span class="c-str">'name'</span>, <span class="c-num">42</span>); <span class="c-cm">// [string, number]</span></pre>
+
+<div class="code-label">Generic constraints — restricting what T can be</div>
+<pre><span class="c-cm">// T must have a .length property (string, array, etc.)</span>
+<span class="c-kw">function</span> <span class="c-fn">logLength</span>&lt;<span class="c-ty">T</span> <span class="c-kw">extends</span> { length: <span class="c-ty">number</span> }&gt;(<span class="c-var">value</span>: <span class="c-ty">T</span>): <span class="c-ty">T</span> {
+  <span class="c-fn">console</span>.<span class="c-fn">log</span>(<span class="c-var">value</span>.length);
+  <span class="c-kw">return</span> <span class="c-var">value</span>;
+}
+<span class="c-fn">logLength</span>(<span class="c-str">'hello'</span>);   <span class="c-cm">// ✓ strings have .length</span>
+<span class="c-fn">logLength</span>([<span class="c-num">1</span>, <span class="c-num">2</span>, <span class="c-num">3</span>]); <span class="c-cm">// ✓ arrays have .length</span>
+<span class="c-fn">logLength</span>(<span class="c-num">42</span>);        <span class="c-cm">// ❌ Error: number has no .length</span>
+
+<span class="c-cm">// Constrain to keys of an object — extremely useful pattern</span>
+<span class="c-kw">function</span> <span class="c-fn">getProperty</span>&lt;<span class="c-ty">T</span>, <span class="c-ty">K</span> <span class="c-kw">extends</span> <span class="c-kw">keyof</span> <span class="c-ty">T</span>&gt;(<span class="c-var">obj</span>: <span class="c-ty">T</span>, <span class="c-var">key</span>: <span class="c-ty">K</span>): <span class="c-ty">T</span>[<span class="c-ty">K</span>] {
+  <span class="c-kw">return</span> <span class="c-var">obj</span>[<span class="c-var">key</span>];
+}
+
+<span class="c-kw">const</span> <span class="c-var">user</span> = { name: <span class="c-str">'Arjun'</span>, age: <span class="c-num">28</span>, city: <span class="c-str">'Ahmedabad'</span> };
+<span class="c-fn">getProperty</span>(<span class="c-var">user</span>, <span class="c-str">'name'</span>); <span class="c-cm">// ✓ returns string</span>
+<span class="c-fn">getProperty</span>(<span class="c-var">user</span>, <span class="c-str">'age'</span>);  <span class="c-cm">// ✓ returns number</span>
+<span class="c-fn">getProperty</span>(<span class="c-var">user</span>, <span class="c-str">'xyz'</span>);  <span class="c-cm">// ❌ Error: 'xyz' is not a key of user</span></pre>
+
+<div class="code-label">Generic interfaces and classes — the React useState pattern</div>
+<pre><span class="c-cm">// Generic interface</span>
+<span class="c-kw">interface</span> <span class="c-ty">ApiResponse</span>&lt;<span class="c-ty">TData</span>&gt; {
+  data:    <span class="c-ty">TData</span>;
+  status:  <span class="c-ty">number</span>;
+  message: <span class="c-ty">string</span>;
+}
+
+<span class="c-cm">// Use it with concrete types</span>
+<span class="c-kw">type</span> <span class="c-ty">UserResponse</span>  = <span class="c-ty">ApiResponse</span>&lt;<span class="c-ty">User</span>&gt;;
+<span class="c-kw">type</span> <span class="c-ty">UsersResponse</span> = <span class="c-ty">ApiResponse</span>&lt;<span class="c-ty">User</span>[]&gt;;
+<span class="c-kw">type</span> <span class="c-ty">PostResponse</span>  = <span class="c-ty">ApiResponse</span>&lt;<span class="c-ty">Post</span>&gt;;
+
+<span class="c-cm">// Generic class — like a typed container</span>
+<span class="c-kw">class</span> <span class="c-ty">Stack</span>&lt;<span class="c-ty">T</span>&gt; {
+  <span class="c-kw">private</span> items: <span class="c-ty">T</span>[] = [];
+
+  <span class="c-fn">push</span>(<span class="c-var">item</span>: <span class="c-ty">T</span>): <span class="c-ty">void</span>   { <span class="c-kw">this</span>.items.<span class="c-fn">push</span>(<span class="c-var">item</span>); }
+  <span class="c-fn">pop</span>():          <span class="c-ty">T</span> | <span class="c-ty">undefined</span> { <span class="c-kw">return</span> <span class="c-kw">this</span>.items.<span class="c-fn">pop</span>(); }
+  <span class="c-fn">peek</span>():         <span class="c-ty">T</span> | <span class="c-ty">undefined</span> { <span class="c-kw">return</span> <span class="c-kw">this</span>.items.at(-<span class="c-num">1</span>); }
+  <span class="c-fn">isEmpty</span>():      <span class="c-ty">boolean</span>       { <span class="c-kw">return</span> <span class="c-kw">this</span>.items.length === <span class="c-num">0</span>; }
+}
+
+<span class="c-kw">const</span> <span class="c-var">strStack</span> = <span class="c-kw">new</span> <span class="c-ty">Stack</span>&lt;<span class="c-ty">string</span>&gt;();
+<span class="c-var">strStack</span>.<span class="c-fn">push</span>(<span class="c-str">'hello'</span>); <span class="c-cm">// ✓</span>
+<span class="c-var">strStack</span>.<span class="c-fn">push</span>(<span class="c-num">42</span>);      <span class="c-cm">// ❌ Error: number is not assignable to string</span></pre>
+
+<div class="tip">Generic constraints with <code>extends</code> are used everywhere in real codebases. The pattern <code>K extends keyof T</code> means "K must be a valid key of T" — this is the foundation of utility types like Pick, Omit, and Record. Understand it and utility types become obvious.</div>
+<div class="nav-row"><button class="nav-btn" onclick="goto(2)">← Interfaces vs Types</button><button class="nav-btn primary" onclick="goto(4)">Next: Type Narrowing →</button></div>
+</div>
+
+<!-- ══════════════════════════════════════════
+     4 — TYPE NARROWING
+══════════════════════════════════════════ -->
+<div class="section" id="s4">
+<div class="sec-title">Type Narrowing</div>
+<div class="sec-sub">TypeScript tracks type possibilities through your control flow. Type narrowing is how you help it — you check a condition, and TS narrows the type from a wide possibility to a specific one.</div>
+
+<div class="theory">
+  When you have a value of type <span class="key">string | number</span>, TypeScript won't let you call string methods on it because it might be a number. <strong>Narrowing</strong> is the process of refining that union to a specific type inside a conditional block. TypeScript performs <strong>control flow analysis</strong> — it tracks what you've checked and narrows the type accordingly within each branch.<br><br>
+  There are multiple ways to narrow: <span class="key">typeof</span> for primitives, <span class="key">instanceof</span> for class instances, <span class="key">in</span> for property existence, discriminated unions via a shared "tag" property, and custom <strong>type guards</strong> for complex cases.
+</div>
+
+<div class="code-label">typeof — narrowing primitives</div>
+<pre><span class="c-kw">function</span> <span class="c-fn">process</span>(<span class="c-var">value</span>: <span class="c-ty">string</span> | <span class="c-ty">number</span> | <span class="c-ty">boolean</span>) {
+  <span class="c-kw">if</span> (<span class="c-kw">typeof</span> <span class="c-var">value</span> === <span class="c-str">'string'</span>) {
+    <span class="c-cm">// Inside here, TypeScript KNOWS value is string</span>
+    <span class="c-kw">return</span> <span class="c-var">value</span>.<span class="c-fn">toUpperCase</span>(); <span class="c-cm">// ✓ string methods available</span>
+  }
+
+  <span class="c-kw">if</span> (<span class="c-kw">typeof</span> <span class="c-var">value</span> === <span class="c-str">'number'</span>) {
+    <span class="c-cm">// value narrowed to number here</span>
+    <span class="c-kw">return</span> <span class="c-var">value</span>.<span class="c-fn">toFixed</span>(<span class="c-num">2</span>); <span class="c-cm">// ✓ number methods available</span>
+  }
+
+  <span class="c-cm">// Here TS knows value must be boolean (the only remaining option)</span>
+  <span class="c-kw">return</span> <span class="c-var">value</span> ? <span class="c-str">'yes'</span> : <span class="c-str">'no'</span>;
+}</pre>
+
+<div class="code-label">instanceof — narrowing class instances</div>
+<pre><span class="c-kw">class</span> <span class="c-ty">Cat</span>  { <span class="c-fn">meow</span>()  { <span class="c-kw">return</span> <span class="c-str">'meow'</span>; } }
+<span class="c-kw">class</span> <span class="c-ty">Dog</span>  { <span class="c-fn">bark</span>()  { <span class="c-kw">return</span> <span class="c-str">'woof'</span>; } }
+
+<span class="c-kw">function</span> <span class="c-fn">makeSound</span>(<span class="c-var">animal</span>: <span class="c-ty">Cat</span> | <span class="c-ty">Dog</span>) {
+  <span class="c-kw">if</span> (<span class="c-var">animal</span> <span class="c-kw">instanceof</span> <span class="c-ty">Cat</span>) {
+    <span class="c-kw">return</span> <span class="c-var">animal</span>.<span class="c-fn">meow</span>(); <span class="c-cm">// ✓ animal is Cat here</span>
+  }
+  <span class="c-kw">return</span> <span class="c-var">animal</span>.<span class="c-fn">bark</span>();   <span class="c-cm">// ✓ animal is Dog here</span>
+}</pre>
+
+<div class="code-label">Discriminated unions — the most powerful narrowing pattern</div>
+<pre><span class="c-cm">// A "discriminant" is a shared property with literal types</span>
+<span class="c-kw">type</span> <span class="c-ty">Shape</span> =
+  | { kind: <span class="c-str">'circle'</span>;    radius:             <span class="c-ty">number</span> }
+  | { kind: <span class="c-str">'rectangle'</span>; width: <span class="c-ty">number</span>; height: <span class="c-ty">number</span> }
+  | { kind: <span class="c-str">'triangle'</span>;  base:  <span class="c-ty">number</span>; height: <span class="c-ty">number</span> };
+
+<span class="c-kw">function</span> <span class="c-fn">getArea</span>(<span class="c-var">shape</span>: <span class="c-ty">Shape</span>): <span class="c-ty">number</span> {
+  <span class="c-kw">switch</span> (<span class="c-var">shape</span>.kind) {       <span class="c-cm">// ← discriminant property</span>
+    <span class="c-kw">case</span> <span class="c-str">'circle'</span>:
+      <span class="c-kw">return</span> Math.PI <span class="c-op">*</span> <span class="c-var">shape</span>.radius <span class="c-op">**</span> <span class="c-num">2</span>; <span class="c-cm">// shape.radius ✓</span>
+    <span class="c-kw">case</span> <span class="c-str">'rectangle'</span>:
+      <span class="c-kw">return</span> <span class="c-var">shape</span>.width <span class="c-op">*</span> <span class="c-var">shape</span>.height;   <span class="c-cm">// shape.width ✓</span>
+    <span class="c-kw">case</span> <span class="c-str">'triangle'</span>:
+      <span class="c-kw">return</span> (<span class="c-var">shape</span>.base <span class="c-op">*</span> <span class="c-var">shape</span>.height) / <span class="c-num">2</span>;
+  }
+}
+<span class="c-cm">// Add a new shape variant? TS forces you to handle it in every switch.</span></pre>
+
+<div class="code-label">Custom type guards — for when TS can't narrow automatically</div>
+<pre><span class="c-cm">// Return type "value is Type" is a type predicate</span>
+<span class="c-cm">// When this function returns true, TS narrows the type</span>
+<span class="c-kw">function</span> <span class="c-fn">isUser</span>(<span class="c-var">value</span>: <span class="c-ty">unknown</span>): <span class="c-var">value</span> <span class="c-kw">is</span> <span class="c-ty">User</span> {
+  <span class="c-kw">return</span> (
+    <span class="c-kw">typeof</span> <span class="c-var">value</span> === <span class="c-str">'object'</span> &&
+    <span class="c-var">value</span> !== <span class="c-kw">null</span> &&
+    <span class="c-str">'name'</span> <span class="c-kw">in</span> <span class="c-var">value</span> &&
+    <span class="c-str">'email'</span> <span class="c-kw">in</span> <span class="c-var">value</span>
+  );
+}
+
+<span class="c-kw">const</span> <span class="c-var">raw</span>: <span class="c-ty">unknown</span> = <span class="c-fn">JSON</span>.<span class="c-fn">parse</span>(<span class="c-var">apiResponse</span>);
+
+<span class="c-kw">if</span> (<span class="c-fn">isUser</span>(<span class="c-var">raw</span>)) {
+  <span class="c-cm">// raw is narrowed to User inside this block ✓</span>
+  <span class="c-fn">console</span>.<span class="c-fn">log</span>(<span class="c-var">raw</span>.name); <span class="c-cm">// no error</span>
+}
+
+<span class="c-cm">// Exhaustiveness checking — TS tells you when you miss a case</span>
+<span class="c-kw">function</span> <span class="c-fn">assertNever</span>(<span class="c-var">x</span>: <span class="c-ty">never</span>): <span class="c-ty">never</span> {
+  <span class="c-kw">throw new</span> <span class="c-fn">Error</span>(<span class="c-str">`Unexpected value: ${x}`</span>);
+}
+<span class="c-cm">// Add assertNever(shape) as the default: case in a switch</span>
+<span class="c-cm">// TS will error if you add a new Shape variant and forget to handle it</span></pre>
+
+<div class="tip">Discriminated unions + exhaustiveness checking is the pattern that makes TypeScript shine in large codebases. When a new team member adds a new Shape variant, every switch statement that doesn't handle it will produce a compile error. The compiler guides developers to correct completions.</div>
+<div class="nav-row"><button class="nav-btn" onclick="goto(3)">← Generics</button><button class="nav-btn primary" onclick="goto(5)">Next: Utility Types →</button></div>
+</div>
+
+<!-- ══════════════════════════════════════════
+     5 — UTILITY TYPES
+══════════════════════════════════════════ -->
+<div class="section" id="s5">
+<div class="sec-title">Utility Types</div>
+<div class="sec-sub">TypeScript ships with a library of built-in generic types for common type transformations. These save you from rewriting the same mapped types everywhere. Learn these and you'll write dramatically less boilerplate.</div>
+
+<div class="theory">
+  Utility types are <strong>built-in generic types</strong> that transform other types. They're all built using mapped types and conditional types under the hood (which we cover in Advanced Types). You don't need to understand the internals to use them — just know what each does. They are globally available — no import needed.<br><br>
+  The most important ones in daily development: <span class="key">Partial</span>, <span class="key">Required</span>, <span class="key">Readonly</span>, <span class="key">Pick</span>, <span class="key">Omit</span>, <span class="key">Record</span>, <span class="key">Exclude</span>, <span class="key">Extract</span>, <span class="key">ReturnType</span>, <span class="key">Parameters</span>.
+</div>
+
+<div class="ut-grid">
+  <div class="ut-card"><div class="ut-name">Partial&lt;T&gt;</div><div class="ut-desc">Makes all properties optional. Perfect for update/patch operations.</div><div class="ut-ex">Partial&lt;User&gt; → all fields optional</div></div>
+  <div class="ut-card"><div class="ut-name">Required&lt;T&gt;</div><div class="ut-desc">Makes all properties required. Opposite of Partial.</div><div class="ut-ex">Required&lt;User&gt; → no optional fields</div></div>
+  <div class="ut-card"><div class="ut-name">Readonly&lt;T&gt;</div><div class="ut-desc">Makes all properties read-only. Useful for immutable data.</div><div class="ut-ex">Readonly&lt;User&gt; → no mutation</div></div>
+  <div class="ut-card"><div class="ut-name">Pick&lt;T, K&gt;</div><div class="ut-desc">Creates type with only the properties K from T.</div><div class="ut-ex">Pick&lt;User, 'name'|'email'&gt;</div></div>
+  <div class="ut-card"><div class="ut-name">Omit&lt;T, K&gt;</div><div class="ut-desc">Creates type with all properties of T except K.</div><div class="ut-ex">Omit&lt;User, 'password'&gt;</div></div>
+  <div class="ut-card"><div class="ut-name">Record&lt;K, V&gt;</div><div class="ut-desc">Creates type with keys K and values V.</div><div class="ut-ex">Record&lt;string, number&gt;</div></div>
+  <div class="ut-card"><div class="ut-name">Exclude&lt;T, U&gt;</div><div class="ut-desc">Removes types from T that are assignable to U.</div><div class="ut-ex">Exclude&lt;string|null, null&gt; → string</div></div>
+  <div class="ut-card"><div class="ut-name">Extract&lt;T, U&gt;</div><div class="ut-desc">Keeps only types from T that are assignable to U.</div><div class="ut-ex">Extract&lt;A|B|C, A|B&gt; → A|B</div></div>
+  <div class="ut-card"><div class="ut-name">NonNullable&lt;T&gt;</div><div class="ut-desc">Removes null and undefined from T.</div><div class="ut-ex">NonNullable&lt;string|null&gt; → string</div></div>
+  <div class="ut-card"><div class="ut-name">ReturnType&lt;T&gt;</div><div class="ut-desc">Gets the return type of a function type T.</div><div class="ut-ex">ReturnType&lt;typeof getUser&gt;</div></div>
+  <div class="ut-card"><div class="ut-name">Parameters&lt;T&gt;</div><div class="ut-desc">Gets the parameter types of a function as a tuple.</div><div class="ut-ex">Parameters&lt;typeof fetch&gt;</div></div>
+  <div class="ut-card"><div class="ut-name">Awaited&lt;T&gt;</div><div class="ut-desc">Unwraps Promise types. Gets the resolved type.</div><div class="ut-ex">Awaited&lt;Promise&lt;User&gt;&gt; → User</div></div>
+</div>
+
+<div class="code-label">Utility types in real API code — the patterns you'll use daily</div>
+<pre><span class="c-kw">interface</span> <span class="c-ty">User</span> {
+  id:       <span class="c-ty">number</span>;
+  name:     <span class="c-ty">string</span>;
+  email:    <span class="c-ty">string</span>;
+  password: <span class="c-ty">string</span>;
+  avatar?:  <span class="c-ty">string</span>;
+}
+
+<span class="c-cm">// Partial — for PATCH/update endpoints (all fields optional)</span>
+<span class="c-kw">async function</span> <span class="c-fn">updateUser</span>(<span class="c-var">id</span>: <span class="c-ty">number</span>, <span class="c-var">data</span>: <span class="c-ty">Partial</span>&lt;<span class="c-ty">User</span>&gt;) {
+  <span class="c-cm">// data can have any subset of User's fields</span>
+}
+<span class="c-fn">updateUser</span>(<span class="c-num">1</span>, { name: <span class="c-str">'New Name'</span> });   <span class="c-cm">// ✓</span>
+<span class="c-fn">updateUser</span>(<span class="c-num">1</span>, { email: <span class="c-str">'new@email.com'</span>, avatar: <span class="c-str">'url'</span> }); <span class="c-cm">// ✓</span>
+
+<span class="c-cm">// Omit — never expose password to the frontend</span>
+<span class="c-kw">type</span> <span class="c-ty">PublicUser</span> = <span class="c-ty">Omit</span>&lt;<span class="c-ty">User</span>, <span class="c-str">'password'</span>&gt;;
+
+<span class="c-cm">// Pick — just the fields you need for a specific view</span>
+<span class="c-kw">type</span> <span class="c-ty">UserPreview</span> = <span class="c-ty">Pick</span>&lt;<span class="c-ty">User</span>, <span class="c-str">'id'</span> | <span class="c-str">'name'</span> | <span class="c-str">'avatar'</span>&gt;;
+
+<span class="c-cm">// Record — a map of userId → User</span>
+<span class="c-kw">type</span> <span class="c-ty">UserCache</span> = <span class="c-ty">Record</span>&lt;<span class="c-ty">number</span>, <span class="c-ty">PublicUser</span>&gt;;
+
+<span class="c-cm">// ReturnType — infer the type without importing the interface</span>
+<span class="c-kw">async function</span> <span class="c-fn">fetchUser</span>(): <span class="c-ty">Promise</span>&lt;<span class="c-ty">User</span>&gt; { <span class="c-cm">/* ... */</span> }
+<span class="c-kw">type</span> <span class="c-ty">FetchUserResult</span> = <span class="c-ty">Awaited</span>&lt;<span class="c-ty">ReturnType</span>&lt;<span class="c-kw">typeof</span> <span class="c-fn">fetchUser</span>&gt;&gt;; <span class="c-cm">// = User</span>
+
+<span class="c-cm">// Readonly — freeze data coming from the server</span>
+<span class="c-kw">function</span> <span class="c-fn">loadConfig</span>(): <span class="c-ty">Readonly</span>&lt;<span class="c-ty">Config</span>&gt; {
+  <span class="c-kw">return</span> { apiUrl: <span class="c-str">'https://...'</span>, timeout: <span class="c-num">5000</span> };
+}
+<span class="c-kw">const</span> <span class="c-var">cfg</span> = <span class="c-fn">loadConfig</span>();
+<span class="c-var">cfg</span>.timeout = <span class="c-num">3000</span>; <span class="c-cm">// ❌ Error: Cannot assign to readonly property</span></pre>
+
+<div class="tip">Partial&lt;T&gt; + Required&lt;Pick&lt;T, 'id'&gt;&gt; is the pattern for update operations — require the ID to identify the record, but make all other fields optional. This is the exact shape of a PATCH request body. You'll write this combination constantly.</div>
+<div class="nav-row"><button class="nav-btn" onclick="goto(4)">← Type Narrowing</button><button class="nav-btn primary" onclick="goto(6)">Next: Enums & Literals →</button></div>
+</div>
+
+<!-- ══════════════════════════════════════════
+     6 — ENUMS & LITERAL TYPES
+══════════════════════════════════════════ -->
+<div class="section" id="s6">
+<div class="sec-title">Enums & Literal Types</div>
+<div class="sec-sub">Two ways to express a fixed set of allowed values. They look similar but behave very differently. Senior devs have strong opinions about this — and for good reason.</div>
+
+<div class="theory">
+  When you have a value that can only be one of a fixed set of options (like status: 'active' | 'inactive'), TypeScript gives you two tools: <span class="key">enum</span> (a runtime construct that generates JavaScript code) and <span class="key">literal type unions</span> (a compile-time only construct that compiles away completely).<br><br>
+  <strong>The important truth</strong>: The TypeScript team, the language creator (Anders Hejlsberg), and most senior TS developers recommend avoiding regular <code>enum</code> in favour of literal type unions or <code>const enum</code> for most use cases. Enums have footguns — numeric enums in particular can cause serious bugs.
+</div>
+
+<div class="code-label">Numeric enums — the one to be careful with</div>
+<pre><span class="c-cm">// Numeric enum — generates runtime JS code, values are numbers</span>
+<span class="c-kw">enum</span> <span class="c-ty">Direction</span> {
+  Up,     <span class="c-cm">// = 0</span>
+  Down,   <span class="c-cm">// = 1</span>
+  Left,   <span class="c-cm">// = 2</span>
+  Right,  <span class="c-cm">// = 3</span>
+}
+
+<span class="c-var">Direction</span>.Up;    <span class="c-cm">// 0</span>
+<span class="c-var">Direction</span>[<span class="c-num">0</span>];   <span class="c-cm">// 'Up' ← reverse mapping is generated</span>
+
+<span class="c-cm">// THE BIG GOTCHA — numeric enums accept any number!</span>
+<span class="c-kw">function</span> <span class="c-fn">move</span>(<span class="c-var">dir</span>: <span class="c-ty">Direction</span>) { <span class="c-cm">/* ... */</span> }
+<span class="c-fn">move</span>(<span class="c-ty">Direction</span>.Up); <span class="c-cm">// ✓</span>
+<span class="c-fn">move</span>(<span class="c-num">0</span>);            <span class="c-cm">// ✓ TypeScript accepts this!</span>
+<span class="c-fn">move</span>(<span class="c-num">999</span>);          <span class="c-cm">// ✓ TypeScript ACCEPTS THIS TOO! Bug!</span></pre>
+
+<div class="code-label">String enums — safer, but still generates JS code</div>
+<pre><span class="c-cm">// String enums — values are strings, no reverse mapping, no random numbers</span>
+<span class="c-kw">enum</span> <span class="c-ty">Status</span> {
+  Active   = <span class="c-str">'ACTIVE'</span>,
+  Inactive = <span class="c-str">'INACTIVE'</span>,
+  Pending  = <span class="c-str">'PENDING'</span>,
+}
+<span class="c-kw">type</span> <span class="c-ty">UserStatus</span> = <span class="c-ty">Status</span>;
+<span class="c-fn">setStatus</span>(<span class="c-ty">Status</span>.Active);   <span class="c-cm">// 'ACTIVE'</span>
+<span class="c-fn">setStatus</span>(<span class="c-str">'ACTIVE'</span>);         <span class="c-cm">// ❌ Error — must use enum member</span>
+
+<span class="c-cm">// Generates this JS (it's a real object at runtime):</span>
+<span class="c-kw">var</span> <span class="c-ty">Status</span>;
+(<span class="c-kw">function</span>(<span class="c-ty">Status</span>) {
+  <span class="c-ty">Status</span>[<span class="c-str">'Active'</span>]   = <span class="c-str">'ACTIVE'</span>;
+  <span class="c-ty">Status</span>[<span class="c-str">'Inactive'</span>] = <span class="c-str">'INACTIVE'</span>;
+})(<span class="c-ty">Status</span> <span class="c-op">||=</span> {});</pre>
+
+<div class="code-label">Literal unions — the modern recommended approach</div>
+<pre><span class="c-cm">// ✅ Preferred by most senior TS devs — compiles to NOTHING</span>
+<span class="c-kw">type</span> <span class="c-ty">Status</span> = <span class="c-str">'active'</span> | <span class="c-str">'inactive'</span> | <span class="c-str">'pending'</span>;
+<span class="c-kw">type</span> <span class="c-ty">Direction</span> = <span class="c-str">'up'</span> | <span class="c-str">'down'</span> | <span class="c-str">'left'</span> | <span class="c-str">'right'</span>;
+
+<span class="c-kw">function</span> <span class="c-fn">setStatus</span>(<span class="c-var">s</span>: <span class="c-ty">Status</span>) { <span class="c-cm">/* ... */</span> }
+<span class="c-fn">setStatus</span>(<span class="c-str">'active'</span>);  <span class="c-cm">// ✓</span>
+<span class="c-fn">setStatus</span>(<span class="c-str">'ACTIVE'</span>);  <span class="c-cm">// ❌ Error: Type '"ACTIVE"' is not assignable</span>
+<span class="c-fn">setStatus</span>(<span class="c-str">'deleted'</span>); <span class="c-cm">// ❌ Error: Type '"deleted"' is not assignable</span>
+
+<span class="c-cm">// Const object — namespace-like access with zero runtime overhead</span>
+<span class="c-kw">const</span> <span class="c-ty">STATUS</span> = {
+  Active:   <span class="c-str">'active'</span>,
+  Inactive: <span class="c-str">'inactive'</span>,
+  Pending:  <span class="c-str">'pending'</span>,
+} <span class="c-kw">as const</span>; <span class="c-cm">// 'as const' makes values literal types, not just string</span>
+
+<span class="c-kw">type</span> <span class="c-ty">Status</span> = <span class="c-kw">typeof</span> <span class="c-ty">STATUS</span>[<span class="c-kw">keyof typeof</span> <span class="c-ty">STATUS</span>];
+<span class="c-cm">// = 'active' | 'inactive' | 'pending'</span>
+<span class="c-cm">// Usage: STATUS.Active gives you 'active' with full autocomplete</span>
+<span class="c-cm">// This is the best of both worlds — enum-like API, zero JS output</span></pre>
+
+<div class="code-label">'as const' — the most powerful assertion in TypeScript</div>
+<pre><span class="c-cm">// Without as const — TS widens the types</span>
+<span class="c-kw">const</span> <span class="c-var">config1</span> = { url: <span class="c-str">'https://api.com'</span>, timeout: <span class="c-num">5000</span> };
+<span class="c-cm">// type: { url: string; timeout: number } — wide types</span>
+
+<span class="c-cm">// With as const — every value becomes its literal type</span>
+<span class="c-kw">const</span> <span class="c-var">config2</span> = { url: <span class="c-str">'https://api.com'</span>, timeout: <span class="c-num">5000</span> } <span class="c-kw">as const</span>;
+<span class="c-cm">// type: { readonly url: "https://api.com"; readonly timeout: 5000 }</span>
+<span class="c-cm">// Values are narrowed to exact literals AND made readonly</span>
+
+<span class="c-cm">// Extremely useful for array literals turned into union types</span>
+<span class="c-kw">const</span> <span class="c-var">ROUTES</span> = [<span class="c-str">'/home'</span>, <span class="c-str">'/about'</span>, <span class="c-str">'/contact'</span>] <span class="c-kw">as const</span>;
+<span class="c-kw">type</span> <span class="c-ty">Route</span> = <span class="c-kw">typeof</span> <span class="c-var">ROUTES</span>[<span class="c-ty">number</span>]; <span class="c-cm">// '/home' | '/about' | '/contact'</span></pre>
+
+<div class="warn">Numeric enums are the biggest footgun in TypeScript. They accept any number because the reverse mapping breaks type safety. If you must use an enum (e.g., for compatibility), use string enums. Better yet — use literal type unions + as const.</div>
+<div class="nav-row"><button class="nav-btn" onclick="goto(5)">← Utility Types</button><button class="nav-btn primary" onclick="goto(7)">Next: Classes & OOP →</button></div>
+</div>
+
+<!-- ══════════════════════════════════════════
+     7 — CLASSES & OOP
+══════════════════════════════════════════ -->
+<div class="section" id="s7">
+<div class="sec-title">Classes & OOP in TypeScript</div>
+<div class="sec-sub">TypeScript takes JavaScript classes and adds access modifiers, abstract classes, decorators, and parameter properties — making OOP patterns from Java/C# feel natural.</div>
+
+<div class="theory">
+  TypeScript classes compile to regular JavaScript classes but add compile-time access control and type checking. The key additions: <span class="key">public</span> (default — accessible everywhere), <span class="key">private</span> (only within the class), <span class="key">protected</span> (within the class and subclasses), <span class="key">readonly</span> (can only be assigned in constructor).<br><br>
+  TypeScript also supports <strong>abstract classes</strong> — classes you can't instantiate directly, only extend. They define a contract that subclasses must implement. This is the TypeScript way to define base classes with enforced method signatures.
+</div>
+
+<div class="code-label">Access modifiers — TypeScript OOP fundamentals</div>
+<pre><span class="c-kw">class</span> <span class="c-ty">BankAccount</span> {
+  <span class="c-cm">// public: accessible everywhere (this is the default)</span>
+  <span class="c-kw">public</span> owner: <span class="c-ty">string</span>;
+
+  <span class="c-cm">// readonly: set in constructor, never changed after</span>
+  <span class="c-kw">readonly</span> accountNumber: <span class="c-ty">string</span>;
+
+  <span class="c-cm">// private: only accessible within BankAccount class</span>
+  <span class="c-kw">private</span> balance: <span class="c-ty">number</span>;
+
+  <span class="c-cm">// protected: accessible within this class AND subclasses</span>
+  <span class="c-kw">protected</span> transactionLog: <span class="c-ty">string</span>[] = [];
+
+  <span class="c-fn">constructor</span>(<span class="c-var">owner</span>: <span class="c-ty">string</span>, <span class="c-var">initialBalance</span>: <span class="c-ty">number</span>) {
+    <span class="c-kw">this</span>.owner         = <span class="c-var">owner</span>;
+    <span class="c-kw">this</span>.balance        = <span class="c-var">initialBalance</span>;
+    <span class="c-kw">this</span>.accountNumber  = <span class="c-fn">generateId</span>();
+  }
+
+  <span class="c-fn">deposit</span>(<span class="c-var">amount</span>: <span class="c-ty">number</span>): <span class="c-ty">void</span> {
+    <span class="c-kw">if</span> (<span class="c-var">amount</span> <span class="c-op">&lt;=</span> <span class="c-num">0</span>) <span class="c-kw">throw new</span> <span class="c-fn">Error</span>(<span class="c-str">'Amount must be positive'</span>);
+    <span class="c-kw">this</span>.balance <span class="c-op">+=</span> <span class="c-var">amount</span>;
+    <span class="c-kw">this</span>.transactionLog.<span class="c-fn">push</span>(<span class="c-str">`+${amount}`</span>);
+  }
+
+  <span class="c-cm">// Getter — accessed like a property, not a method</span>
+  <span class="c-kw">get</span> <span class="c-fn">currentBalance</span>(): <span class="c-ty">number</span> { <span class="c-kw">return</span> <span class="c-kw">this</span>.balance; }
+}
+
+<span class="c-kw">const</span> <span class="c-var">account</span> = <span class="c-kw">new</span> <span class="c-ty">BankAccount</span>(<span class="c-str">'Arjun'</span>, <span class="c-num">1000</span>);
+<span class="c-var">account</span>.<span class="c-fn">deposit</span>(<span class="c-num">500</span>);
+<span class="c-var">account</span>.balance;       <span class="c-cm">// ❌ Error: private property</span>
+<span class="c-var">account</span>.currentBalance; <span class="c-cm">// ✓ 1500 — accessed via getter</span></pre>
+
+<div class="code-label">Parameter properties — TypeScript shorthand (used everywhere)</div>
+<pre><span class="c-cm">// Without shorthand — verbose and repetitive</span>
+<span class="c-kw">class</span> <span class="c-ty">ServiceLong</span> {
+  <span class="c-kw">private</span> db: <span class="c-ty">Database</span>;
+  <span class="c-kw">private</span> logger: <span class="c-ty">Logger</span>;
+  <span class="c-fn">constructor</span>(<span class="c-var">db</span>: <span class="c-ty">Database</span>, <span class="c-var">logger</span>: <span class="c-ty">Logger</span>) {
+    <span class="c-kw">this</span>.db = <span class="c-var">db</span>; <span class="c-kw">this</span>.logger = <span class="c-var">logger</span>;
+  }
+}
+
+<span class="c-cm">// With parameter properties — much cleaner</span>
+<span class="c-kw">class</span> <span class="c-ty">Service</span> {
+  <span class="c-fn">constructor</span>(
+    <span class="c-kw">private readonly</span> db:     <span class="c-ty">Database</span>,  <span class="c-cm">// declares AND assigns in one step</span>
+    <span class="c-kw">private</span>          logger: <span class="c-ty">Logger</span>,
+    <span class="c-kw">public</span>           name:   <span class="c-ty">string</span>,
+  ) {} <span class="c-cm">// constructor body can be empty!</span>
+}</pre>
+
+<div class="code-label">Abstract classes — define contracts for subclasses</div>
+<pre><span class="c-cm">// Abstract class — can't be instantiated, only extended</span>
+<span class="c-kw">abstract class</span> <span class="c-ty">Animal</span> {
+  <span class="c-fn">constructor</span>(<span class="c-kw">protected</span> name: <span class="c-ty">string</span>) {}
+
+  <span class="c-cm">// Abstract method — subclasses MUST implement this</span>
+  <span class="c-kw">abstract</span> <span class="c-fn">makeSound</span>(): <span class="c-ty">string</span>;
+
+  <span class="c-cm">// Concrete method — subclasses inherit this</span>
+  <span class="c-fn">toString</span>(): <span class="c-ty">string</span> {
+    <span class="c-kw">return</span> <span class="c-str">`${this.name} says: ${this.makeSound()}`</span>;
+  }
+}
+
+<span class="c-kw">class</span> <span class="c-ty">Dog</span> <span class="c-kw">extends</span> <span class="c-ty">Animal</span> {
+  <span class="c-fn">makeSound</span>() { <span class="c-kw">return</span> <span class="c-str">'Woof!'</span>; } <span class="c-cm">// ✓ must implement</span>
+}
+
+<span class="c-kw">class</span> <span class="c-ty">Cat</span> <span class="c-kw">extends</span> <span class="c-ty">Animal</span> {
+  <span class="c-cm">// makeSound() missing → ❌ Error: must implement abstract method</span>
+}
+
+<span class="c-kw">new</span> <span class="c-ty">Animal</span>(<span class="c-str">'?'</span>); <span class="c-cm">// ❌ Error: Cannot create instance of abstract class</span>
+<span class="c-kw">new</span> <span class="c-ty">Dog</span>(<span class="c-str">'Rex'</span>).<span class="c-fn">toString</span>(); <span class="c-cm">// ✓ "Rex says: Woof!"</span></pre>
+
+<div class="tip">Use parameter properties (constructor shortcuts) in every TypeScript class. It's not a shortcut — it's idiomatic TypeScript. Every framework (NestJS, Angular) uses it heavily. You declare, type, and assign a property in a single line. Writing it the long way is just boilerplate.</div>
+<div class="nav-row"><button class="nav-btn" onclick="goto(6)">← Enums & Literals</button><button class="nav-btn primary" onclick="goto(8)">Next: Advanced Types →</button></div>
+</div>
+
+<!-- ══════════════════════════════════════════
+     8 — ADVANCED TYPES
+══════════════════════════════════════════ -->
+<div class="section" id="s8">
+<div class="sec-title">Advanced Types</div>
+<div class="sec-sub">Mapped types, conditional types, template literal types, infer — these are the building blocks TypeScript uses to build its own utility types. Understanding these unlocks the full power of the type system.</div>
+
+<div class="theory">
+  Advanced types let you <strong>compute types from other types</strong> at compile time. Think of them as type-level functions — they take types as inputs and produce new types as output. This is what makes TypeScript's type system truly powerful and what separates a TypeScript expert from a beginner who just adds <code>: string</code> everywhere.<br><br>
+  <strong>Mapped types</strong> transform all properties of a type. <strong>Conditional types</strong> select a type based on a condition. <strong>Template literal types</strong> build string union types from combinations. The <span class="key">infer</span> keyword extracts a type from within a conditional type.
+</div>
+
+<div class="code-label">Mapped types — transform every property of a type</div>
+<pre><span class="c-cm">// Mapped type syntax: [K in keyof T]: ...</span>
+<span class="c-cm">// This is how Partial, Readonly, Required are implemented</span>
+
+<span class="c-cm">// Recreating Partial from scratch to understand the pattern</span>
+<span class="c-kw">type</span> <span class="c-ty">MyPartial</span>&lt;<span class="c-ty">T</span>&gt; = {
+  [<span class="c-ty">K</span> <span class="c-kw">in</span> <span class="c-kw">keyof</span> <span class="c-ty">T</span>]?: <span class="c-ty">T</span>[<span class="c-ty">K</span>]; <span class="c-cm">// ? makes optional, T[K] is the original type</span>
+};
+
+<span class="c-cm">// Recreating Readonly</span>
+<span class="c-kw">type</span> <span class="c-ty">MyReadonly</span>&lt;<span class="c-ty">T</span>&gt; = {
+  <span class="c-kw">readonly</span> [<span class="c-ty">K</span> <span class="c-kw">in</span> <span class="c-kw">keyof</span> <span class="c-ty">T</span>]: <span class="c-ty">T</span>[<span class="c-ty">K</span>];
+};
+
+<span class="c-cm">// Custom: nullable all values</span>
+<span class="c-kw">type</span> <span class="c-ty">Nullable</span>&lt;<span class="c-ty">T</span>&gt; = { [<span class="c-ty">K</span> <span class="c-kw">in</span> <span class="c-kw">keyof</span> <span class="c-ty">T</span>]: <span class="c-ty">T</span>[<span class="c-ty">K</span>] | <span class="c-ty">null</span> };
+
+<span class="c-cm">// Custom: make specific keys required, rest partial</span>
+<span class="c-kw">type</span> <span class="c-ty">WithRequired</span>&lt;<span class="c-ty">T</span>, <span class="c-ty">K</span> <span class="c-kw">extends</span> <span class="c-kw">keyof</span> <span class="c-ty">T</span>&gt; =
+  <span class="c-ty">Partial</span>&lt;<span class="c-ty">T</span>&gt; & <span class="c-ty">Required</span>&lt;<span class="c-ty">Pick</span>&lt;<span class="c-ty">T</span>, <span class="c-ty">K</span>&gt;&gt;;
+
+<span class="c-cm">// Create an update type: id required, rest optional</span>
+<span class="c-kw">type</span> <span class="c-ty">UpdateUser</span> = <span class="c-ty">WithRequired</span>&lt;<span class="c-ty">User</span>, <span class="c-str">'id'</span>&gt;;
+<span class="c-cm">// { id: number } & Partial&lt;User&gt; → id required, rest optional</span></pre>
+
+<div class="code-label">Conditional types — type-level if/else</div>
+<pre><span class="c-cm">// Conditional type: T extends U ? TypeIfTrue : TypeIfFalse</span>
+<span class="c-kw">type</span> <span class="c-ty">IsString</span>&lt;<span class="c-ty">T</span>&gt; = <span class="c-ty">T</span> <span class="c-kw">extends</span> <span class="c-ty">string</span> ? <span class="c-str">'yes'</span> : <span class="c-str">'no'</span>;
+<span class="c-kw">type</span> <span class="c-ty">A</span> = <span class="c-ty">IsString</span>&lt;<span class="c-ty">string</span>&gt;; <span class="c-cm">// 'yes'</span>
+<span class="c-kw">type</span> <span class="c-ty">B</span> = <span class="c-ty">IsString</span>&lt;<span class="c-ty">number</span>&gt;; <span class="c-cm">// 'no'</span>
+
+<span class="c-cm">// 'infer' — extract a type from within a conditional</span>
+<span class="c-cm">// This is how ReturnType is implemented</span>
+<span class="c-kw">type</span> <span class="c-ty">MyReturnType</span>&lt;<span class="c-ty">T</span>&gt; =
+  <span class="c-ty">T</span> <span class="c-kw">extends</span> (...<span class="c-var">args</span>: <span class="c-ty">any</span>[]) <span class="c-op">=></span> <span class="c-kw">infer</span> <span class="c-ty">R</span>
+    ? <span class="c-ty">R</span>   <span class="c-cm">// R is inferred as the return type</span>
+    : <span class="c-ty">never</span>;
+
+<span class="c-kw">type</span> <span class="c-ty">X</span> = <span class="c-ty">MyReturnType</span>&lt;() <span class="c-op">=></span> <span class="c-ty">string</span>&gt;; <span class="c-cm">// string</span>
+<span class="c-kw">type</span> <span class="c-ty">Y</span> = <span class="c-ty">MyReturnType</span>&lt;(<span class="c-var">n</span>: <span class="c-ty">number</span>) <span class="c-op">=></span> <span class="c-ty">User</span>&gt;; <span class="c-cm">// User</span>
+
+<span class="c-cm">// Extract element type from array</span>
+<span class="c-kw">type</span> <span class="c-ty">ElementOf</span>&lt;<span class="c-ty">T</span>&gt; = <span class="c-ty">T</span> <span class="c-kw">extends</span> (<span class="c-kw">infer</span> <span class="c-ty">E</span>)[] ? <span class="c-ty">E</span> : <span class="c-ty">never</span>;
+<span class="c-kw">type</span> <span class="c-ty">Elem</span> = <span class="c-ty">ElementOf</span>&lt;<span class="c-ty">User</span>[]&gt;; <span class="c-cm">// User</span></pre>
+
+<div class="code-label">Template literal types — string manipulation at type level</div>
+<pre><span class="c-cm">// Build string types from combinations</span>
+<span class="c-kw">type</span> <span class="c-ty">EventName</span> = <span class="c-ty">string</span>;
+<span class="c-kw">type</span> <span class="c-ty">EventHandler</span>&lt;<span class="c-ty">T</span> <span class="c-kw">extends</span> <span class="c-ty">string</span>&gt; = <span class="c-str">`on${Capitalize&lt;T&gt;}`</span>;
+
+<span class="c-kw">type</span> <span class="c-ty">ClickHandler</span> = <span class="c-ty">EventHandler</span>&lt;<span class="c-str">'click'</span>&gt;;  <span class="c-cm">// 'onClick'</span>
+<span class="c-kw">type</span> <span class="c-ty">HoverHandler</span> = <span class="c-ty">EventHandler</span>&lt;<span class="c-str">'hover'</span>&gt;;  <span class="c-cm">// 'onHover'</span>
+
+<span class="c-cm">// Generate getter names from object keys</span>
+<span class="c-kw">type</span> <span class="c-ty">Getters</span>&lt;<span class="c-ty">T</span>&gt; = {
+  [<span class="c-ty">K</span> <span class="c-kw">in</span> <span class="c-kw">keyof</span> <span class="c-ty">T</span> <span class="c-kw">as</span> <span class="c-str">`get${Capitalize&lt;string & K&gt;}`</span>]: () <span class="c-op">=></span> <span class="c-ty">T</span>[<span class="c-ty">K</span>]
+};
+
+<span class="c-kw">type</span> <span class="c-ty">UserGetters</span> = <span class="c-ty">Getters</span>&lt;{ name: <span class="c-ty">string</span>; age: <span class="c-ty">number</span> }&gt;;
+<span class="c-cm">// { getName: () => string; getAge: () => number }</span>
+
+<span class="c-cm">// Strongly-typed CSS properties example</span>
+<span class="c-kw">type</span> <span class="c-ty">Side</span>      = <span class="c-str">'top'</span> | <span class="c-str">'right'</span> | <span class="c-str">'bottom'</span> | <span class="c-str">'left'</span>;
+<span class="c-kw">type</span> <span class="c-ty">SpacingKey</span> = <span class="c-str">`margin-${Side}`</span> | <span class="c-str">`padding-${Side}`</span>;
+<span class="c-cm">// 'margin-top'|'margin-right'|...|'padding-bottom'|'padding-left'</span></pre>
+
+<div class="tip">keyof, typeof, infer, and mapped types are the four pillars of advanced TypeScript. Once you understand that TypeScript's own utility types are just combinations of these four concepts, you can write any custom utility type you need. Start by reading the TypeScript source for Partial, Required, and ReturnType — it's illuminating.</div>
+<div class="nav-row"><button class="nav-btn" onclick="goto(7)">← Classes & OOP</button><button class="nav-btn primary" onclick="goto(9)">Next: TS with React →</button></div>
+</div>
+
+<!-- ══════════════════════════════════════════
+     9 — TYPESCRIPT WITH REACT
+══════════════════════════════════════════ -->
+<div class="section" id="s9">
+<div class="sec-title">TypeScript with React</div>
+<div class="sec-sub">Where you'll use TypeScript most in the real world. Typing props, hooks, events, refs, and context — everything you need to write type-safe React components.</div>
+
+<div class="theory">
+  TypeScript + React is the most common pairing in the ecosystem. The key is understanding a few React-specific generic types: <span class="key">React.FC</span> (function component), <span class="key">React.ReactNode</span> (anything renderable), <span class="key">React.ComponentProps</span> (extract props from a component), event types like <span class="key">React.ChangeEvent</span> and <span class="key">React.MouseEvent</span>, and the <span class="key">useRef</span> generic for DOM element references.<br><br>
+  <strong>One important note</strong>: The React team no longer recommends <code>React.FC</code> for defining components. Define component functions with plain function syntax and type the props argument directly — it's simpler, and TypeScript infers the return type automatically.
+</div>
+
+<div class="code-label">Typing React component props — the right way</div>
+<pre><span class="c-cm">// Define props with interface (preferred for objects)</span>
+<span class="c-kw">interface</span> <span class="c-ty">ButtonProps</span> {
+  label:      <span class="c-ty">string</span>;
+  onClick:    () <span class="c-op">=></span> <span class="c-ty">void</span>;
+  variant?:   <span class="c-str">'primary'</span> | <span class="c-str">'secondary'</span> | <span class="c-str">'danger'</span>;
+  disabled?:  <span class="c-ty">boolean</span>;
+  children?:  <span class="c-ty">React</span>.<span class="c-ty">ReactNode</span>; <span class="c-cm">// anything React can render</span>
+}
+
+<span class="c-cm">// ✅ Preferred: plain function, typed prop argument</span>
+<span class="c-kw">function</span> <span class="c-fn">Button</span>({ label, onClick, variant = <span class="c-str">'primary'</span>, disabled = <span class="c-bool">false</span> }: <span class="c-ty">ButtonProps</span>) {
+  <span class="c-kw">return</span> (
+    &lt;button
+      onClick={onClick}
+      disabled={disabled}
+      className={<span class="c-str">`btn btn-${variant}`</span>}
+    &gt;
+      {label}
+    &lt;/button&gt;
+  );
+}
+
+<span class="c-cm">// ❌ Not recommended anymore: React.FC adds implicit children and other quirks</span>
+<span class="c-kw">const</span> <span class="c-var">Button</span>: <span class="c-ty">React</span>.<span class="c-ty">FC</span>&lt;<span class="c-ty">ButtonProps</span>&gt; = ({ label }) <span class="c-op">=></span> &lt;button&gt;{label}&lt;/button&gt;;</pre>
+
+<div class="code-label">Typing useState — when inference isn't enough</div>
+<pre><span class="c-cm">// TypeScript infers from initial value — no annotation needed</span>
+<span class="c-kw">const</span> [count, setCount]   = <span class="c-fn">useState</span>(<span class="c-num">0</span>);        <span class="c-cm">// number</span>
+<span class="c-kw">const</span> [name,  setName]    = <span class="c-fn">useState</span>(<span class="c-str">''</span>);        <span class="c-cm">// string</span>
+<span class="c-kw">const</span> [active, setActive] = <span class="c-fn">useState</span>(<span class="c-bool">false</span>);     <span class="c-cm">// boolean</span>
+
+<span class="c-cm">// Annotate when initial value is null or an empty array</span>
+<span class="c-kw">const</span> [user, setUser]     = <span class="c-fn">useState</span>&lt;<span class="c-ty">User</span> | <span class="c-ty">null</span>&gt;(<span class="c-kw">null</span>);
+<span class="c-kw">const</span> [users, setUsers]   = <span class="c-fn">useState</span>&lt;<span class="c-ty">User</span>[]&gt;([]);
+
+<span class="c-cm">// Using a discriminated union for complex state</span>
+<span class="c-kw">type</span> <span class="c-ty">FetchState</span>&lt;<span class="c-ty">T</span>&gt; =
+  | { status: <span class="c-str">'idle'</span> }
+  | { status: <span class="c-str">'loading'</span> }
+  | { status: <span class="c-str">'success'</span>; data: <span class="c-ty">T</span> }
+  | { status: <span class="c-str">'error'</span>;   error: <span class="c-ty">string</span> };
+
+<span class="c-kw">const</span> [state, setState] = <span class="c-fn">useState</span>&lt;<span class="c-ty">FetchState</span>&lt;<span class="c-ty">User</span>&gt;&gt;({ status: <span class="c-str">'idle'</span> });
+
+<span class="c-kw">if</span> (<span class="c-var">state</span>.status === <span class="c-str">'success'</span>) {
+  <span class="c-var">state</span>.data; <span class="c-cm">// ✓ narrowed to User — no other status has .data</span>
+}</pre>
+
+<div class="code-label">Typing events and useRef</div>
+<pre><span class="c-cm">// Event types — always use React.XEvent over native Event</span>
+<span class="c-kw">function</span> <span class="c-fn">Form</span>() {
+  <span class="c-cm">// Input change event — HTMLInputElement is the target type</span>
+  <span class="c-kw">const</span> <span class="c-fn">handleChange</span> = (<span class="c-var">e</span>: <span class="c-ty">React</span>.<span class="c-ty">ChangeEvent</span>&lt;<span class="c-ty">HTMLInputElement</span>&gt;) <span class="c-op">=></span> {
+    <span class="c-fn">console</span>.<span class="c-fn">log</span>(<span class="c-var">e</span>.target.value);      <span class="c-cm">// ✓ string</span>
+    <span class="c-fn">console</span>.<span class="c-fn">log</span>(<span class="c-var">e</span>.target.checked);    <span class="c-cm">// ✓ boolean (for checkboxes)</span>
+  };
+
+  <span class="c-cm">// Form submit event</span>
+  <span class="c-kw">const</span> <span class="c-fn">handleSubmit</span> = (<span class="c-var">e</span>: <span class="c-ty">React</span>.<span class="c-ty">FormEvent</span>&lt;<span class="c-ty">HTMLFormElement</span>&gt;) <span class="c-op">=></span> {
+    <span class="c-var">e</span>.<span class="c-fn">preventDefault</span>(); <span class="c-cm">// ✓</span>
+  };
+
+  <span class="c-cm">// Button click — MouseEvent</span>
+  <span class="c-kw">const</span> <span class="c-fn">handleClick</span> = (<span class="c-var">e</span>: <span class="c-ty">React</span>.<span class="c-ty">MouseEvent</span>&lt;<span class="c-ty">HTMLButtonElement</span>&gt;) <span class="c-op">=></span> {
+    <span class="c-fn">console</span>.<span class="c-fn">log</span>(<span class="c-var">e</span>.currentTarget.textContent);
+  };
+
+  <span class="c-cm">// useRef — always provide the element type</span>
+  <span class="c-kw">const</span> <span class="c-var">inputRef</span> = <span class="c-fn">useRef</span>&lt;<span class="c-ty">HTMLInputElement</span>&gt;(<span class="c-kw">null</span>);
+  <span class="c-cm">// inputRef.current is HTMLInputElement | null until it mounts</span>
+  <span class="c-kw">const</span> <span class="c-fn">focusInput</span> = () <span class="c-op">=></span> inputRef.current?.<span class="c-fn">focus</span>(); <span class="c-cm">// optional chaining!</span>
+
+  <span class="c-kw">return</span> &lt;input ref={inputRef} onChange={handleChange} /&gt;;
+}</pre>
+
+<div class="code-label">Typing useContext — the complete pattern</div>
+<pre><span class="c-cm">// 1. Define the context shape</span>
+<span class="c-kw">interface</span> <span class="c-ty">AuthContextType</span> {
+  user:   <span class="c-ty">User</span> | <span class="c-kw">null</span>;
+  login:  (<span class="c-var">creds</span>: <span class="c-ty">Credentials</span>) <span class="c-op">=></span> <span class="c-ty">Promise</span>&lt;<span class="c-ty">void</span>&gt;;
+  logout: () <span class="c-op">=></span> <span class="c-ty">void</span>;
+}
+
+<span class="c-cm">// 2. Create context with a default or undefined</span>
+<span class="c-kw">const</span> <span class="c-ty">AuthContext</span> = <span class="c-fn">createContext</span>&lt;<span class="c-ty">AuthContextType</span> | <span class="c-ty">undefined</span>&gt;(<span class="c-kw">undefined</span>);
+
+<span class="c-cm">// 3. Create a typed hook that ensures context is used inside provider</span>
+<span class="c-kw">function</span> <span class="c-fn">useAuth</span>(): <span class="c-ty">AuthContextType</span> {
+  <span class="c-kw">const</span> <span class="c-var">ctx</span> = <span class="c-fn">useContext</span>(<span class="c-ty">AuthContext</span>);
+  <span class="c-kw">if</span> (!<span class="c-var">ctx</span>) <span class="c-kw">throw new</span> <span class="c-fn">Error</span>(<span class="c-str">'useAuth must be inside AuthProvider'</span>);
+  <span class="c-kw">return</span> <span class="c-var">ctx</span>; <span class="c-cm">// narrowed — no longer AuthContextType | undefined</span>
+}
+
+<span class="c-cm">// 4. Use in any component — fully typed</span>
+<span class="c-kw">function</span> <span class="c-fn">Profile</span>() {
+  <span class="c-kw">const</span> { user, logout } = <span class="c-fn">useAuth</span>();
+  <span class="c-kw">return</span> &lt;div&gt;{user?.name}&lt;/div&gt;;
+}</pre>
+
+<div class="tip">Use ComponentProps to extract prop types from existing components — especially from libraries. <code>type ButtonBaseProps = React.ComponentProps&lt;'button'&gt;</code> gives you all native button HTML attributes. <code>React.ComponentProps&lt;typeof MyComponent&gt;</code> gives you a custom component's props. This means you can extend them without rewriting the full interface.</div>
+<div class="nav-row"><button class="nav-btn" onclick="goto(8)">← Advanced Types</button><button class="nav-btn" onclick="goto(0)" style="flex:0.5">↺ Start Over</button></div>
+</div>
+
+</div><!-- end content -->
+
+<script>
+let current = 0;
+const total = 10;
+function goto(n) {
+  document.getElementById('s' + current).classList.remove('active');
+  document.querySelectorAll('.ch-btn')[current].classList.remove('active');
+  current = n;
+  document.getElementById('s' + current).classList.add('active');
+  document.querySelectorAll('.ch-btn')[current].classList.add('active');
+  document.getElementById('prog').style.width = ((n + 1) / total * 100) + '%';
+  window.scrollTo(0, 0);
+  const btn = document.querySelectorAll('.ch-btn')[n];
+  btn.scrollIntoView({ behavior: 'smooth', block: 'nearest', inline: 'center' });
+}
+</script>
+</body>
+</html>

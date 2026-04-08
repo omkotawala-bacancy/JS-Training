@@ -1,0 +1,804 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>JavaScript Mastery Guide</title>
+<style>
+@import url('https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500&family=Syne:wght@400;500;700&display=swap');
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:'Syne',sans-serif;background:#0A0A0F;color:#E2E8F0;min-height:100vh}
+.header{padding:3rem 2rem 1.5rem;border-bottom:1px solid #1E293B;background:linear-gradient(135deg,#0A0A0F 0%,#0F172A 100%)}
+.header h1{font-size:36px;font-weight:700;letter-spacing:-1px}
+.header h1 span{color:#F59E0B}
+.header p{font-size:15px;color:#64748B;margin-top:6px}
+.chapters{display:flex;flex-wrap:wrap;gap:8px;padding:1rem 2rem;border-bottom:1px solid #1E293B;background:#0A0A0F;position:sticky;top:0;z-index:10}
+.ch-btn{font-family:'Syne',sans-serif;font-size:12px;padding:6px 14px;border-radius:20px;border:1px solid #1E293B;background:transparent;color:#64748B;cursor:pointer;transition:all .2s}
+.ch-btn.active{background:#F59E0B;border-color:#F59E0B;color:#000;font-weight:700}
+.ch-btn:hover:not(.active){border-color:#F59E0B;color:#F59E0B}
+.content{max-width:860px;margin:0 auto;padding:2rem}
+.section{display:none}.section.active{display:block}
+.sec-title{font-size:28px;font-weight:700;margin-bottom:6px;letter-spacing:-0.5px}
+.sec-sub{font-size:15px;color:#64748B;margin-bottom:2rem;line-height:1.7}
+.theory{background:#0F172A;border-left:3px solid #6366F1;border-radius:0 8px 8px 0;padding:1.25rem 1.5rem;margin-bottom:1.5rem;font-size:14px;line-height:1.9;color:#94A3B8}
+.theory strong{color:#E2E8F0;font-weight:500}
+.theory .key{display:inline-block;background:#312E81;color:#A5B4FC;font-size:11px;padding:2px 8px;border-radius:10px;margin:0 2px;font-family:'JetBrains Mono',monospace}
+.tip{background:#0F2A1A;border-left:3px solid #10B981;border-radius:0 8px 8px 0;padding:.9rem 1.25rem;margin-bottom:1.25rem;font-size:13px;color:#6EE7B7;line-height:1.7}
+.tip::before{content:"💡 Senior tip: ";font-weight:700;color:#10B981}
+.warn{background:#1A0A0A;border-left:3px solid #EF4444;border-radius:0 8px 8px 0;padding:.9rem 1.25rem;margin-bottom:1.25rem;font-size:13px;color:#FCA5A5}
+.warn::before{content:"⚠ Gotcha: ";font-weight:700;color:#EF4444}
+.code-label{font-size:11px;font-weight:500;color:#475569;letter-spacing:.5px;text-transform:uppercase;margin-bottom:6px;padding:0 4px}
+pre{background:#030712;border:1px solid #1E293B;border-radius:8px;padding:1.25rem 1.5rem;overflow-x:auto;font-family:'JetBrains Mono',monospace;font-size:13px;line-height:1.9;margin-bottom:1.5rem}
+.c-kw{color:#C084FC}.c-str{color:#86EFAC}.c-num{color:#FCA5A5}.c-cm{color:#334155;font-style:italic}
+.c-fn{color:#67E8F9}.c-op{color:#FCD34D}.c-var{color:#E2E8F0}
+.hoist-grid{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin:1.5rem 0}
+.hoist-card{background:#0F172A;border-radius:8px;padding:1rem;font-size:12px;border:1px solid #1E293B}
+.hoist-card .hc-title{font-weight:700;font-size:13px;margin-bottom:10px}
+.phase{display:flex;gap:8px;align-items:flex-start;margin-bottom:6px;font-family:'JetBrains Mono',monospace;font-size:11px;color:#64748B;line-height:1.6}
+.ph{min-width:16px;height:16px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:9px;color:#fff;margin-top:1px;flex-shrink:0}
+.ph1{background:#6366F1}.ph2{background:#10B981}
+.promise-states{display:flex;gap:12px;flex-wrap:wrap;margin:1.5rem 0}
+.ps{flex:1;min-width:130px;border-radius:8px;padding:.9rem 1.1rem;font-size:13px;font-family:'JetBrains Mono',monospace}
+.ps.pending{border:2px dashed #F59E0B;color:#F59E0B}.ps.fulfilled{border:2px solid #10B981;background:rgba(16,185,129,0.06);color:#10B981}.ps.rejected{border:2px solid #EF4444;background:rgba(239,68,68,0.06);color:#EF4444}
+.ps .ps-label{font-size:10px;text-transform:uppercase;letter-spacing:.5px;opacity:.6;margin-bottom:6px}
+.this-table{width:100%;border-collapse:collapse;font-size:13px;margin:1.5rem 0}
+.this-table th{padding:10px 14px;background:#0F172A;font-weight:500;font-size:11px;text-transform:uppercase;letter-spacing:.4px;color:#64748B;text-align:left;border-bottom:1px solid #1E293B}
+.this-table td{padding:10px 14px;border-bottom:1px solid #1E293B;font-family:'JetBrains Mono',monospace;font-size:12px;vertical-align:top}
+.this-table td:first-child{color:#F59E0B;font-family:'Syne',sans-serif;font-size:13px}
+.badge{display:inline-block;font-size:10px;padding:3px 10px;border-radius:10px;font-family:'Syne',sans-serif;font-weight:700}
+.badge.green{background:rgba(16,185,129,.15);color:#10B981}.badge.yellow{background:rgba(245,158,11,.15);color:#F59E0B}.badge.red{background:rgba(239,68,68,.15);color:#EF4444}
+.el-vis{background:#0F172A;border:1px solid #1E293B;border-radius:8px;display:grid;grid-template-columns:1fr 1fr 1fr 1fr;gap:1px;margin-bottom:1.5rem;overflow:hidden}
+.el-zone{background:#030712;padding:1rem}
+.el-label{font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.5px;color:#475569;margin-bottom:8px}
+.el-item{background:#312E81;color:#A5B4FC;font-size:10px;font-family:'JetBrains Mono',monospace;padding:4px 8px;border-radius:4px;margin-bottom:4px;display:inline-block}
+.el-item.macro{background:#78350F;color:#FCD34D}.el-item.micro{background:#064E3B;color:#6EE7B7}.el-out{color:#10B981;font-family:'JetBrains Mono',monospace;font-size:11px;line-height:2}
+.run-btn{font-family:'Syne',sans-serif;font-size:12px;padding:8px 20px;border-radius:20px;border:1px solid #F59E0B;color:#F59E0B;background:transparent;cursor:pointer;transition:all .2s;margin-bottom:1.5rem;margin-right:8px}
+.run-btn:hover{background:#F59E0B;color:#000}
+.nav-row{display:flex;gap:8px;margin-top:2.5rem;padding-top:1.5rem;border-top:1px solid #1E293B}
+.nav-btn{flex:1;font-family:'Syne',sans-serif;font-size:13px;padding:12px;border-radius:8px;border:1px solid #1E293B;background:transparent;color:#E2E8F0;cursor:pointer;transition:all .2s}
+.nav-btn:hover{border-color:#F59E0B;color:#F59E0B}
+.nav-btn.primary{background:#F59E0B;border-color:#F59E0B;color:#000;font-weight:700}
+.progress-bar{height:3px;background:#1E293B}.progress-fill{height:100%;background:#F59E0B;transition:width .4s}
+.vgrid{display:grid;grid-template-columns:repeat(auto-fit,minmax(160px,1fr));gap:10px;margin-bottom:1.5rem}
+.vcard{background:#0F172A;border:1px solid #1E293B;border-radius:8px;padding:.9rem}
+.vt{font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.5px;color:#475569;margin-bottom:6px}
+.vv{font-family:'JetBrains Mono',monospace;font-size:14px;color:#F59E0B;margin-bottom:4px}
+.vd{font-size:11px;color:#475569;line-height:1.5}
+@media(max-width:600px){.hoist-grid{grid-template-columns:1fr}.el-vis{grid-template-columns:1fr 1fr}}
+</style>
+</head>
+<body>
+
+<div class="header">
+  <h1>JavaScript <span>Mastery</span> Guide</h1>
+  <p>From intern to senior — every concept explained with code & theory</p>
+</div>
+
+<div class="chapters" id="chapters">
+  <button class="ch-btn active" onclick="goto(0)">Variables & Types</button>
+  <button class="ch-btn" onclick="goto(1)">Hoisting</button>
+  <button class="ch-btn" onclick="goto(2)">Event Loop</button>
+  <button class="ch-btn" onclick="goto(3)">Async JS</button>
+  <button class="ch-btn" onclick="goto(4)">Promises</button>
+  <button class="ch-btn" onclick="goto(5)">Async/Await</button>
+  <button class="ch-btn" onclick="goto(6)">DOM</button>
+  <button class="ch-btn" onclick="goto(7)">this keyword</button>
+  <button class="ch-btn" onclick="goto(8)">map/filter/reduce</button>
+  <button class="ch-btn" onclick="goto(9)">Closures & Scope</button>
+</div>
+<div class="progress-bar"><div class="progress-fill" id="prog" style="width:10%"></div></div>
+
+<div class="content">
+
+<!-- 0 VARIABLES -->
+<div class="section active" id="s0">
+<div class="sec-title">Variables & Types</div>
+<div class="sec-sub">The foundation. Before you touch anything else, you have to understand how JavaScript stores data in memory and what the three ways to declare variables actually mean.</div>
+
+<div class="theory">
+  JavaScript has <strong>8 data types</strong>: 7 primitives (<span class="key">string</span> <span class="key">number</span> <span class="key">bigint</span> <span class="key">boolean</span> <span class="key">null</span> <span class="key">undefined</span> <span class="key">symbol</span>) and 1 structural type (<span class="key">object</span>). Primitives are <strong>immutable values stored on the stack</strong>. Objects (including arrays & functions) are <strong>reference types stored on the heap</strong> — your variable holds a pointer, not the value itself.<br><br>
+  <strong>var</strong> is function-scoped and gets hoisted. <strong>let</strong> and <strong>const</strong> are block-scoped, live in a "Temporal Dead Zone" before declaration. In modern JS — const by default, let when you need to reassign, never var in new code.
+</div>
+
+<div class="code-label">Primitives vs References — the most important distinction</div>
+<pre><span class="c-cm">// PRIMITIVES: copied by VALUE</span>
+<span class="c-kw">let</span> <span class="c-var">a</span> <span class="c-op">=</span> <span class="c-num">5</span>;
+<span class="c-kw">let</span> <span class="c-var">b</span> <span class="c-op">=</span> <span class="c-var">a</span>;    <span class="c-cm">// b gets a COPY of value 5</span>
+<span class="c-var">b</span> <span class="c-op">=</span> <span class="c-num">99</span>;
+<span class="c-fn">console</span>.<span class="c-fn">log</span>(<span class="c-var">a</span>); <span class="c-cm">// 5 — untouched. a and b are independent.</span>
+
+<span class="c-cm">// OBJECTS: copied by REFERENCE</span>
+<span class="c-kw">const</span> <span class="c-var">user1</span> <span class="c-op">=</span> { name: <span class="c-str">'Arjun'</span> };
+<span class="c-kw">const</span> <span class="c-var">user2</span> <span class="c-op">=</span> <span class="c-var">user1</span>; <span class="c-cm">// user2 points to the SAME object in memory</span>
+<span class="c-var">user2</span>.name <span class="c-op">=</span> <span class="c-str">'Riya'</span>;
+<span class="c-fn">console</span>.<span class="c-fn">log</span>(<span class="c-var">user1</span>.name); <span class="c-cm">// 'Riya' — BOTH changed! Same memory address.</span>
+
+<span class="c-cm">// FIX: clone the object</span>
+<span class="c-kw">const</span> <span class="c-var">user3</span> <span class="c-op">=</span> { ...<span class="c-var">user1</span> };           <span class="c-cm">// shallow clone</span>
+<span class="c-kw">const</span> <span class="c-var">deep</span>  <span class="c-op">=</span> <span class="c-fn">structuredClone</span>(<span class="c-var">user1</span>); <span class="c-cm">// deep clone (nested objects too)</span></pre>
+
+<div class="tip">The #1 source of bugs for new devs is mutating an object thinking you're copying it. Always ask: "am I dealing with a primitive or a reference?" Objects need to be cloned before modification.</div>
+
+<div class="code-label">var vs let vs const — scoping rules</div>
+<pre><span class="c-kw">function</span> <span class="c-fn">demo</span>() {
+  <span class="c-kw">if</span> (<span class="c-kw">true</span>) {
+    <span class="c-kw">var</span> <span class="c-var">x</span> <span class="c-op">=</span> <span class="c-str">'I leak!'</span>;  <span class="c-cm">// scoped to demo(), NOT the if block</span>
+    <span class="c-kw">let</span> <span class="c-var">y</span> <span class="c-op">=</span> <span class="c-str">'Block only'</span>; <span class="c-cm">// scoped to the if block</span>
+  }
+  <span class="c-fn">console</span>.<span class="c-fn">log</span>(<span class="c-var">x</span>); <span class="c-cm">// 'I leak!' — var escaped the if block</span>
+  <span class="c-fn">console</span>.<span class="c-fn">log</span>(<span class="c-var">y</span>); <span class="c-cm">// ReferenceError — y is block-scoped</span>
+}
+
+<span class="c-cm">// const — can't reassign, but CAN mutate object content</span>
+<span class="c-kw">const</span> <span class="c-var">arr</span> <span class="c-op">=</span> [<span class="c-num">1</span>, <span class="c-num">2</span>, <span class="c-num">3</span>];
+<span class="c-var">arr</span>.<span class="c-fn">push</span>(<span class="c-num">4</span>); <span class="c-cm">// ✓ fine — you're mutating, not reassigning</span>
+<span class="c-var">arr</span> <span class="c-op">=</span> [<span class="c-num">5</span>];   <span class="c-cm">// ✗ TypeError: Assignment to constant variable</span></pre>
+
+<div class="vgrid">
+  <div class="vcard"><div class="vt">typeof null</div><div class="vv">"object" 😅</div><div class="vd">Classic JS bug. null is NOT an object. This is a 27-year-old mistake in the spec that can never be fixed for compatibility.</div></div>
+  <div class="vcard"><div class="vt">NaN === NaN</div><div class="vv">false</div><div class="vd">NaN is not equal to itself. Use Number.isNaN(x) — not isNaN(), which coerces strings first.</div></div>
+  <div class="vcard"><div class="vt">"5" == 5</div><div class="vv">true (==)</div><div class="vd">Loose equality coerces types. Always use === strict equality in production code.</div></div>
+</div>
+<div class="nav-row"><button class="nav-btn primary" onclick="goto(1)">Next: Hoisting →</button></div>
+</div>
+
+<!-- 1 HOISTING -->
+<div class="section" id="s1">
+<div class="sec-title">Hoisting</div>
+<div class="sec-sub">Before JavaScript runs a single line, it makes a pass through the file and "hoists" declarations to the top of their scope. Understanding this is crucial for debugging order-dependent bugs.</div>
+
+<div class="theory">
+  The JS engine runs in <strong>two phases</strong>. In the <strong>Creation Phase</strong>, it scans code and sets up memory for all declarations. <strong>var</strong> is hoisted and initialized to <span class="key">undefined</span>. <strong>Function declarations</strong> are fully hoisted — name AND body. <strong>let/const</strong> are hoisted but placed in the <strong>Temporal Dead Zone (TDZ)</strong> — they exist but cannot be accessed until their line is reached. In the <strong>Execution Phase</strong>, code runs line by line with assignments filled in.
+</div>
+
+<div class="hoist-grid">
+  <div class="hoist-card">
+    <div class="hc-title" style="color:#A5B4FC">function declaration</div>
+    <div class="phase"><div class="ph ph1">1</div> Name + entire body moved to top</div>
+    <div class="phase"><div class="ph ph2">2</div> Callable BEFORE its definition line</div>
+    <pre style="margin-top:10px;font-size:11px;background:#030712;border-radius:6px;padding:10px;color:#86EFAC;border:1px solid #1E293B">greet(); // ✓ Works fine!
+function greet() {
+  return "Hello";
+}</pre>
+  </div>
+  <div class="hoist-card">
+    <div class="hc-title" style="color:#FCD34D">var declaration</div>
+    <div class="phase"><div class="ph ph1">1</div> Name hoisted, initialized to undefined</div>
+    <div class="phase"><div class="ph ph2">2</div> Value assigned when line is reached</div>
+    <pre style="margin-top:10px;font-size:11px;background:#030712;border-radius:6px;padding:10px;color:#FCA5A5;border:1px solid #1E293B">console.log(x); // undefined
+var x = 5;
+console.log(x); // 5</pre>
+  </div>
+  <div class="hoist-card">
+    <div class="hc-title" style="color:#6EE7B7">let / const</div>
+    <div class="phase"><div class="ph ph1">1</div> Hoisted but in Temporal Dead Zone</div>
+    <div class="phase"><div class="ph ph2">2</div> TDZ ends at the declaration line</div>
+    <pre style="margin-top:10px;font-size:11px;background:#030712;border-radius:6px;padding:10px;color:#FCA5A5;border:1px solid #1E293B">console.log(y); // ReferenceError!
+// ^ accessing before TDZ ends
+let y = 10; // TDZ ends here</pre>
+  </div>
+  <div class="hoist-card">
+    <div class="hc-title" style="color:#FCA5A5">function expression</div>
+    <div class="phase"><div class="ph ph1">1</div> Variable name hoisted (var → undefined)</div>
+    <div class="phase"><div class="ph ph2">2</div> Function body is NOT hoisted</div>
+    <pre style="margin-top:10px;font-size:11px;background:#030712;border-radius:6px;padding:10px;color:#FCA5A5;border:1px solid #1E293B">sayHi(); // TypeError: not a function
+var sayHi = function() {};
+// At call time, sayHi === undefined</pre>
+  </div>
+</div>
+
+<div class="code-label">What the JS engine actually sees</div>
+<pre><span class="c-cm">// WHAT YOU WRITE:</span>
+<span class="c-fn">console</span>.<span class="c-fn">log</span>(<span class="c-fn">add</span>(<span class="c-num">2</span>, <span class="c-num">3</span>)); <span class="c-cm">// 5 — works!</span>
+<span class="c-fn">console</span>.<span class="c-fn">log</span>(<span class="c-var">msg</span>);        <span class="c-cm">// undefined — var was hoisted</span>
+<span class="c-kw">var</span> <span class="c-var">msg</span> <span class="c-op">=</span> <span class="c-str">'hello'</span>;
+<span class="c-kw">function</span> <span class="c-fn">add</span>(<span class="c-var">a</span>, <span class="c-var">b</span>) { <span class="c-kw">return</span> <span class="c-var">a</span> <span class="c-op">+</span> <span class="c-var">b</span>; }
+
+<span class="c-cm">// WHAT JS ENGINE SEES (conceptually, after hoisting):</span>
+<span class="c-kw">function</span> <span class="c-fn">add</span>(<span class="c-var">a</span>, <span class="c-var">b</span>) { <span class="c-kw">return</span> <span class="c-var">a</span> <span class="c-op">+</span> <span class="c-var">b</span>; } <span class="c-cm">// ← moved to top</span>
+<span class="c-kw">var</span> <span class="c-var">msg</span>;                                   <span class="c-cm">// ← hoisted, = undefined</span>
+<span class="c-cm">// let/const live in TDZ until their line</span>
+
+<span class="c-fn">console</span>.<span class="c-fn">log</span>(<span class="c-fn">add</span>(<span class="c-num">2</span>, <span class="c-num">3</span>)); <span class="c-cm">// 5 ✓</span>
+<span class="c-fn">console</span>.<span class="c-fn">log</span>(<span class="c-var">msg</span>);        <span class="c-cm">// undefined</span>
+<span class="c-var">msg</span> <span class="c-op">=</span> <span class="c-str">'hello'</span>;           <span class="c-cm">// ← assignment stays here</span></pre>
+
+<div class="warn">Classic interview trap: <code>for(var i=0;i&lt;3;i++) setTimeout(()=>console.log(i),0)</code> prints 3,3,3 — NOT 0,1,2. var is function-scoped and shared across all iterations. When the callbacks fire, the loop is already done and i===3. Fix: use let.</div>
+<div class="nav-row"><button class="nav-btn" onclick="goto(0)">← Variables</button><button class="nav-btn primary" onclick="goto(2)">Next: Event Loop →</button></div>
+</div>
+
+<!-- 2 EVENT LOOP -->
+<div class="section" id="s2">
+<div class="sec-title">The Event Loop</div>
+<div class="sec-sub">Arguably the most important concept in JavaScript. Everything async — Promises, DOM events, timers — runs through this system. Understand this and the rest becomes obvious.</div>
+
+<div class="theory">
+  JavaScript is <strong>single-threaded</strong> — it can only do one thing at a time. Yet it handles network requests, timers, and user input without freezing. How? The <strong>Event Loop</strong> — a system with four components:<br><br>
+  <strong>1. Call Stack</strong> — where code executes. Functions pushed when called, popped when returned. LIFO.<br>
+  <strong>2. Web APIs</strong> — when you call setTimeout/fetch/addEventListener, the browser handles the work outside JS on a separate thread.<br>
+  <strong>3. Microtask Queue</strong> — higher priority. Promise .then/.catch callbacks, queueMicrotask(), MutationObserver.<br>
+  <strong>4. Callback Queue (Macrotask)</strong> — lower priority. setTimeout, setInterval, DOM events.<br><br>
+  <strong>The rule</strong>: After each task, if the Call Stack is empty — drain ALL microtasks first, then take ONE macrotask.
+</div>
+
+<div class="el-vis">
+  <div class="el-zone">
+    <div class="el-label">Call Stack</div>
+    <div id="el-stack"><div class="el-item">main()</div></div>
+  </div>
+  <div class="el-zone">
+    <div class="el-label">Web APIs</div>
+    <div id="el-apis"></div>
+    <div class="el-label" style="margin-top:12px">Microtask Queue ⚡</div>
+    <div id="el-micro"></div>
+  </div>
+  <div class="el-zone">
+    <div class="el-label">Callback Queue</div>
+    <div id="el-macro"></div>
+  </div>
+  <div class="el-zone">
+    <div class="el-label">Output 📤</div>
+    <div id="el-out" class="el-out"></div>
+  </div>
+</div>
+<button class="run-btn" onclick="runEL()">▶ Animate Event Loop</button>
+<button class="run-btn" onclick="resetEL()">↺ Reset</button>
+
+<div class="code-label">The classic execution order quiz — what prints first?</div>
+<pre><span class="c-fn">console</span>.<span class="c-fn">log</span>(<span class="c-str">'1 — sync'</span>);            <span class="c-cm">// Call Stack — runs immediately</span>
+
+<span class="c-fn">setTimeout</span>(() <span class="c-op">=></span> {
+  <span class="c-fn">console</span>.<span class="c-fn">log</span>(<span class="c-str">'4 — macrotask'</span>);       <span class="c-cm">// Callback Queue — runs last</span>
+}, <span class="c-num">0</span>);
+
+<span class="c-kw">Promise</span>.<span class="c-fn">resolve</span>().<span class="c-fn">then</span>(() <span class="c-op">=></span> {
+  <span class="c-fn">console</span>.<span class="c-fn">log</span>(<span class="c-str">'3 — microtask'</span>);       <span class="c-cm">// Microtask Queue — runs before macrotask</span>
+});
+
+<span class="c-fn">console</span>.<span class="c-fn">log</span>(<span class="c-str">'2 — sync'</span>);            <span class="c-cm">// Call Stack — runs immediately</span>
+
+<span class="c-cm">// OUTPUT: 1, 2, 3, 4
+// Sync code first → ALL microtasks drain → ONE macrotask</span></pre>
+
+<div class="tip">setTimeout(fn, 0) does NOT mean "run immediately". It means "put this callback in the macrotask queue after at least 0ms". Sync code and ALL microtasks will always run first. That "0" is a minimum delay, not a guarantee of immediacy.</div>
+<div class="nav-row"><button class="nav-btn" onclick="goto(1)">← Hoisting</button><button class="nav-btn primary" onclick="goto(3)">Next: Async JS →</button></div>
+</div>
+
+<!-- 3 ASYNC JS -->
+<div class="section" id="s3">
+<div class="sec-title">Asynchronous JavaScript</div>
+<div class="sec-sub">The evolution from callback hell to elegant async/await. Understanding WHY each pattern exists makes the API click instantly.</div>
+
+<div class="theory">
+  JS's async story evolved in <strong>three generations</strong>.<br><br>
+  <strong>Generation 1: Callbacks</strong> — pass a function to be called when work is done. Simple, but nesting creates "callback hell" — a pyramid of indented code that's nearly impossible to maintain or error-handle properly.<br><br>
+  <strong>Generation 2: Promises</strong> (ES2015) — represent a value that may exist in the future. Chain with <span class="key">.then()</span> to flatten the pyramid. Built-in error handling with <span class="key">.catch()</span>.<br><br>
+  <strong>Generation 3: Async/Await</strong> (ES2017) — syntactic sugar over Promises. Makes async code look synchronous. Zero new runtime concepts — it's still Promises under the hood.
+</div>
+
+<div class="code-label">Generation 1: Callback Hell — never write this</div>
+<pre><span class="c-fn">getUser</span>(<span class="c-num">1</span>, <span class="c-kw">function</span>(<span class="c-var">user</span>) {
+  <span class="c-fn">getOrders</span>(<span class="c-var">user</span>.id, <span class="c-kw">function</span>(<span class="c-var">orders</span>) {
+    <span class="c-fn">getProduct</span>(<span class="c-var">orders</span>[<span class="c-num">0</span>].productId, <span class="c-kw">function</span>(<span class="c-var">product</span>) {
+      <span class="c-fn">getInventory</span>(<span class="c-var">product</span>.id, <span class="c-kw">function</span>(<span class="c-var">inv</span>) {
+        <span class="c-cm">// The dreaded pyramid. Error handling per callback. Unreadable.</span>
+        <span class="c-fn">console</span>.<span class="c-fn">log</span>(<span class="c-var">inv</span>);
+      }, <span class="c-var">handleError</span>);
+    }, <span class="c-var">handleError</span>);
+  }, <span class="c-var">handleError</span>);
+}, <span class="c-var">handleError</span>);</pre>
+
+<div class="code-label">Generation 2: Promise Chain — better</div>
+<pre><span class="c-fn">getUser</span>(<span class="c-num">1</span>)
+  .<span class="c-fn">then</span>(<span class="c-var">user</span>    <span class="c-op">=></span> <span class="c-fn">getOrders</span>(<span class="c-var">user</span>.id))
+  .<span class="c-fn">then</span>(<span class="c-var">orders</span>  <span class="c-op">=></span> <span class="c-fn">getProduct</span>(<span class="c-var">orders</span>[<span class="c-num">0</span>].productId))
+  .<span class="c-fn">then</span>(<span class="c-var">product</span> <span class="c-op">=></span> <span class="c-fn">getInventory</span>(<span class="c-var">product</span>.id))
+  .<span class="c-fn">then</span>(<span class="c-var">inv</span>     <span class="c-op">=></span> <span class="c-fn">console</span>.<span class="c-fn">log</span>(<span class="c-var">inv</span>))
+  .<span class="c-fn">catch</span>(<span class="c-var">err</span>   <span class="c-op">=></span> <span class="c-fn">console</span>.<span class="c-fn">error</span>(<span class="c-var">err</span>)); <span class="c-cm">// ONE error handler for all!</span></pre>
+
+<div class="code-label">Generation 3: Async/Await — write this in 2025</div>
+<pre><span class="c-kw">async function</span> <span class="c-fn">loadInventory</span>(<span class="c-var">userId</span>) {
+  <span class="c-kw">try</span> {
+    <span class="c-kw">const</span> <span class="c-var">user</span>    <span class="c-op">=</span> <span class="c-kw">await</span> <span class="c-fn">getUser</span>(<span class="c-var">userId</span>);
+    <span class="c-kw">const</span> <span class="c-var">orders</span>  <span class="c-op">=</span> <span class="c-kw">await</span> <span class="c-fn">getOrders</span>(<span class="c-var">user</span>.id);
+    <span class="c-kw">const</span> <span class="c-var">product</span> <span class="c-op">=</span> <span class="c-kw">await</span> <span class="c-fn">getProduct</span>(<span class="c-var">orders</span>[<span class="c-num">0</span>].productId);
+    <span class="c-kw">const</span> <span class="c-var">inv</span>     <span class="c-op">=</span> <span class="c-kw">await</span> <span class="c-fn">getInventory</span>(<span class="c-var">product</span>.id);
+    <span class="c-fn">console</span>.<span class="c-fn">log</span>(<span class="c-var">inv</span>);
+  } <span class="c-kw">catch</span> (<span class="c-var">err</span>) {
+    <span class="c-fn">console</span>.<span class="c-fn">error</span>(<span class="c-str">'Something failed:'</span>, <span class="c-var">err</span>);
+  }
+}
+<span class="c-cm">// Reads like synchronous code. try/catch for errors. Clean.</span></pre>
+
+<div class="warn">Performance trap — awaiting independent operations sequentially: each await blocks for 1s, total = 3s. If operations don't depend on each other, fire them in parallel with Promise.all.</div>
+
+<div class="code-label">Sequential (slow) vs Parallel (fast)</div>
+<pre><span class="c-cm">// ❌ Sequential — waits for each one before starting the next</span>
+<span class="c-kw">async function</span> <span class="c-fn">slow</span>() {
+  <span class="c-kw">const</span> <span class="c-var">a</span> <span class="c-op">=</span> <span class="c-kw">await</span> <span class="c-fn">fetchA</span>(); <span class="c-cm">// 1s</span>
+  <span class="c-kw">const</span> <span class="c-var">b</span> <span class="c-op">=</span> <span class="c-kw">await</span> <span class="c-fn">fetchB</span>(); <span class="c-cm">// 1s — total so far: 2s</span>
+  <span class="c-kw">const</span> <span class="c-var">c</span> <span class="c-op">=</span> <span class="c-kw">await</span> <span class="c-fn">fetchC</span>(); <span class="c-cm">// 1s — total: 3s</span>
+}
+
+<span class="c-cm">// ✅ Parallel — all fire at once, total = slowest individual</span>
+<span class="c-kw">async function</span> <span class="c-fn">fast</span>() {
+  <span class="c-kw">const</span> [<span class="c-var">a</span>, <span class="c-var">b</span>, <span class="c-var">c</span>] <span class="c-op">=</span> <span class="c-kw">await</span> <span class="c-kw">Promise</span>.<span class="c-fn">all</span>([
+    <span class="c-fn">fetchA</span>(), <span class="c-fn">fetchB</span>(), <span class="c-fn">fetchC</span>()
+  ]); <span class="c-cm">// total: ~1s</span>
+}</pre>
+<div class="nav-row"><button class="nav-btn" onclick="goto(2)">← Event Loop</button><button class="nav-btn primary" onclick="goto(4)">Next: Promises →</button></div>
+</div>
+
+<!-- 4 PROMISES -->
+<div class="section" id="s4">
+<div class="sec-title">Promises</div>
+<div class="sec-sub">A Promise is a contract: "I don't have this value yet, but I promise to give it to you — or tell you why I couldn't." Three states, immutable once settled.</div>
+
+<div class="theory">
+  A Promise has exactly <strong>3 states</strong>: <span class="key">pending</span> (initial — neither done nor failed), <span class="key">fulfilled</span> (success, value available), <span class="key">rejected</span> (failed, reason available). Once fulfilled or rejected, a Promise is <strong>settled</strong> and its state never changes — it's immutable.<br><br>
+  <strong>Promise combinators</strong>: <span class="key">Promise.all([])</span> — all must succeed, one failure = all fail. <span class="key">Promise.allSettled([])</span> — waits for all, gives each result regardless of success/failure. <span class="key">Promise.race([])</span> — settles with the FIRST one to settle (good for timeouts). <span class="key">Promise.any([])</span> — resolves with FIRST success, only rejects if ALL fail.
+</div>
+
+<div class="promise-states">
+  <div class="ps pending"><div class="ps-label">state 1</div>pending<br><span style="font-size:11px;opacity:.7">⏳ operation in progress...</span></div>
+  <div class="ps fulfilled"><div class="ps-label">state 2 (settled)</div>fulfilled<br><span style="font-size:11px;opacity:.7">✓ .then(value) called</span></div>
+  <div class="ps rejected"><div class="ps-label">state 3 (settled)</div>rejected<br><span style="font-size:11px;opacity:.7">✗ .catch(reason) called</span></div>
+</div>
+
+<div class="code-label">Creating a Promise from scratch</div>
+<pre><span class="c-kw">const</span> <span class="c-var">fetchData</span> <span class="c-op">=</span> <span class="c-kw">new</span> <span class="c-kw">Promise</span>((<span class="c-var">resolve</span>, <span class="c-var">reject</span>) <span class="c-op">=></span> {
+  <span class="c-cm">// The executor runs synchronously. Do async work here.</span>
+  <span class="c-fn">setTimeout</span>(() <span class="c-op">=></span> {
+    <span class="c-kw">const</span> <span class="c-var">success</span> <span class="c-op">=</span> <span class="c-kw">true</span>;
+
+    <span class="c-kw">if</span> (<span class="c-var">success</span>) {
+      <span class="c-fn">resolve</span>({ id: <span class="c-num">1</span>, name: <span class="c-str">'Arjun'</span> }); <span class="c-cm">// Promise → fulfilled</span>
+    } <span class="c-kw">else</span> {
+      <span class="c-fn">reject</span>(<span class="c-kw">new</span> <span class="c-fn">Error</span>(<span class="c-str">'Network failed'</span>));   <span class="c-cm">// Promise → rejected</span>
+    }
+  }, <span class="c-num">1000</span>);
+});
+
+<span class="c-var">fetchData</span>
+  .<span class="c-fn">then</span>(<span class="c-var">user</span>    <span class="c-op">=></span> <span class="c-fn">console</span>.<span class="c-fn">log</span>(<span class="c-str">'Got user:'</span>, <span class="c-var">user</span>))
+  .<span class="c-fn">catch</span>(<span class="c-var">err</span>     <span class="c-op">=></span> <span class="c-fn">console</span>.<span class="c-fn">error</span>(<span class="c-str">'Failed:'</span>, <span class="c-var">err</span>))
+  .<span class="c-fn">finally</span>(()  <span class="c-op">=></span> <span class="c-fn">hideSpinner</span>()); <span class="c-cm">// always runs — hide loading UI</span></pre>
+
+<div class="code-label">Promise combinators — when to use each</div>
+<pre><span class="c-kw">const</span> <span class="c-var">p1</span> <span class="c-op">=</span> <span class="c-fn">fetch</span>(<span class="c-str">'/api/user'</span>);
+<span class="c-kw">const</span> <span class="c-var">p2</span> <span class="c-op">=</span> <span class="c-fn">fetch</span>(<span class="c-str">'/api/posts'</span>);
+<span class="c-kw">const</span> <span class="c-var">p3</span> <span class="c-op">=</span> <span class="c-fn">fetch</span>(<span class="c-str">'/api/settings'</span>);
+
+<span class="c-cm">// all: if ONE fails, all fail. For critical required data.</span>
+<span class="c-kw">const</span> [<span class="c-var">user</span>, <span class="c-var">posts</span>, <span class="c-var">settings</span>] <span class="c-op">=</span> <span class="c-kw">await</span> <span class="c-kw">Promise</span>.<span class="c-fn">all</span>([<span class="c-var">p1</span>, <span class="c-var">p2</span>, <span class="c-var">p3</span>]);
+
+<span class="c-cm">// allSettled: shows result of each. For optional/independent data.</span>
+<span class="c-kw">const</span> <span class="c-var">results</span> <span class="c-op">=</span> <span class="c-kw">await</span> <span class="c-kw">Promise</span>.<span class="c-fn">allSettled</span>([<span class="c-var">p1</span>, <span class="c-var">p2</span>, <span class="c-var">p3</span>]);
+<span class="c-var">results</span>.<span class="c-fn">forEach</span>(<span class="c-var">r</span> <span class="c-op">=></span> {
+  <span class="c-kw">if</span> (<span class="c-var">r</span>.status <span class="c-op">===</span> <span class="c-str">'fulfilled'</span>) <span class="c-fn">use</span>(<span class="c-var">r</span>.value);
+  <span class="c-kw">else</span> <span class="c-fn">logError</span>(<span class="c-var">r</span>.reason);
+});
+
+<span class="c-cm">// race: first to settle wins. Great for timeout patterns.</span>
+<span class="c-kw">const</span> <span class="c-var">timeout</span> <span class="c-op">=</span> <span class="c-kw">new</span> <span class="c-kw">Promise</span>((_, <span class="c-var">rej</span>) <span class="c-op">=></span> <span class="c-fn">setTimeout</span>(<span class="c-var">rej</span>, <span class="c-num">5000</span>, <span class="c-str">'Timeout!'</span>));
+<span class="c-kw">const</span> <span class="c-var">data</span> <span class="c-op">=</span> <span class="c-kw">await</span> <span class="c-kw">Promise</span>.<span class="c-fn">race</span>([<span class="c-fn">fetch</span>(<span class="c-str">'/api/data'</span>), <span class="c-var">timeout</span>]);</pre>
+
+<div class="tip">Always handle promise rejections. An unhandled rejection crashes Node.js processes. In browsers it's a warning today — but treat it like an error. Every Promise chain needs a .catch(), every async function needs a try/catch.</div>
+<div class="nav-row"><button class="nav-btn" onclick="goto(3)">← Async JS</button><button class="nav-btn primary" onclick="goto(5)">Next: Async/Await →</button></div>
+</div>
+
+<!-- 5 ASYNC AWAIT -->
+<div class="section" id="s5">
+<div class="sec-title">Async / Await</div>
+<div class="sec-sub">Pure syntactic sugar over Promises. Doesn't add new capability — just makes Promise-based code dramatically easier to read and write.</div>
+
+<div class="theory">
+  The <span class="key">async</span> keyword before a function does two things: makes it always return a Promise, and allows use of <span class="key">await</span> inside it. The <span class="key">await</span> keyword pauses execution of the async function (NOT the whole thread!) until the Promise resolves, then gives you the resolved value. Every <code>await</code> is just a <code>.then()</code> callback under the hood. Error handling uses standard <span class="key">try/catch/finally</span> blocks.<br><br>
+  <strong>Critical mental model</strong>: When you await something, the function suspends and control returns to the event loop. Other code can run. When the Promise resolves, the function resumes from where it paused. This is cooperative multitasking — never blocking.
+</div>
+
+<div class="code-label">Async/Await deep dive with real fetch pattern</div>
+<pre><span class="c-kw">async function</span> <span class="c-fn">getUser</span>(<span class="c-var">id</span>) {
+  <span class="c-kw">try</span> {
+    <span class="c-cm">// await pauses HERE until fetch() Promise resolves</span>
+    <span class="c-kw">const</span> <span class="c-var">response</span> <span class="c-op">=</span> <span class="c-kw">await</span> <span class="c-fn">fetch</span>(<span class="c-str">`/api/users/${id}`</span>);
+
+    <span class="c-cm">// CRITICAL: fetch() only rejects on network failure, NOT 4xx/5xx!</span>
+    <span class="c-cm">// A 404 or 500 response is a "successful" fetch. Check manually:</span>
+    <span class="c-kw">if</span> (<span class="c-op">!</span><span class="c-var">response</span>.ok) {
+      <span class="c-kw">throw new</span> <span class="c-fn">Error</span>(<span class="c-str">`HTTP ${response.status}: ${response.statusText}`</span>);
+    }
+
+    <span class="c-cm">// .json() is also async — it reads and parses the response body</span>
+    <span class="c-kw">const</span> <span class="c-var">data</span> <span class="c-op">=</span> <span class="c-kw">await</span> <span class="c-var">response</span>.<span class="c-fn">json</span>();
+    <span class="c-kw">return</span> <span class="c-var">data</span>; <span class="c-cm">// becomes the resolved value of getUser()'s Promise</span>
+
+  } <span class="c-kw">catch</span> (<span class="c-var">err</span>) {
+    <span class="c-cm">// catches network errors AND the manually thrown error above</span>
+    <span class="c-fn">console</span>.<span class="c-fn">error</span>(<span class="c-str">'Failed to fetch user:'</span>, <span class="c-var">err</span>);
+    <span class="c-kw">throw</span> <span class="c-var">err</span>; <span class="c-cm">// re-throw so callers know it failed</span>
+
+  } <span class="c-kw">finally</span> {
+    <span class="c-fn">hideSpinner</span>(); <span class="c-cm">// ALWAYS runs — success OR failure</span>
+  }
+}
+
+<span class="c-cm">// async function returns a Promise — call it like this:</span>
+<span class="c-kw">const</span> <span class="c-var">user</span> <span class="c-op">=</span> <span class="c-kw">await</span> <span class="c-fn">getUser</span>(<span class="c-num">1</span>); <span class="c-cm">// inside another async function</span>
+<span class="c-fn">getUser</span>(<span class="c-num">1</span>).<span class="c-fn">then</span>(<span class="c-var">u</span> <span class="c-op">=></span> <span class="c-fn">render</span>(<span class="c-var">u</span>));  <span class="c-cm">// or chain .then() on the Promise</span></pre>
+
+<div class="code-label">Go-style error handling — elegant pattern</div>
+<pre><span class="c-cm">// Utility: wraps any Promise → returns [error, data] tuple</span>
+<span class="c-kw">const</span> <span class="c-fn">to</span> <span class="c-op">=</span> <span class="c-var">promise</span> <span class="c-op">=></span>
+  <span class="c-var">promise</span>.<span class="c-fn">then</span>(<span class="c-var">data</span> <span class="c-op">=></span> [<span class="c-kw">null</span>, <span class="c-var">data</span>]).<span class="c-fn">catch</span>(<span class="c-var">err</span> <span class="c-op">=></span> [<span class="c-var">err</span>, <span class="c-kw">null</span>]);
+
+<span class="c-kw">async function</span> <span class="c-fn">loadDashboard</span>() {
+  <span class="c-kw">const</span> [<span class="c-var">userErr</span>, <span class="c-var">user</span>] <span class="c-op">=</span> <span class="c-kw">await</span> <span class="c-fn">to</span>(<span class="c-fn">getUser</span>(<span class="c-num">1</span>));
+  <span class="c-kw">if</span> (<span class="c-var">userErr</span>) <span class="c-kw">return</span> <span class="c-fn">showError</span>(<span class="c-var">userErr</span>); <span class="c-cm">// handle immediately</span>
+
+  <span class="c-kw">const</span> [<span class="c-var">postsErr</span>, <span class="c-var">posts</span>] <span class="c-op">=</span> <span class="c-kw">await</span> <span class="c-fn">to</span>(<span class="c-fn">getPosts</span>(<span class="c-var">user</span>.id));
+  <span class="c-kw">if</span> (<span class="c-var">postsErr</span>) <span class="c-kw">return</span> <span class="c-fn">showPartial</span>(<span class="c-var">user</span>); <span class="c-cm">// graceful degradation</span>
+
+  <span class="c-fn">render</span>({ <span class="c-var">user</span>, <span class="c-var">posts</span> });
+}
+<span class="c-cm">// No try/catch nesting. Errors handled at each step.</span></pre>
+
+<div class="warn">Don't use await inside Array.forEach — forEach doesn't understand async, the awaits are ignored and your loop finishes before any promise resolves. Use for...of, or Promise.all(array.map(async item => ...)).</div>
+<div class="nav-row"><button class="nav-btn" onclick="goto(4)">← Promises</button><button class="nav-btn primary" onclick="goto(6)">Next: DOM →</button></div>
+</div>
+
+<!-- 6 DOM -->
+<div class="section" id="s6">
+<div class="sec-title">The DOM</div>
+<div class="sec-sub">The Document Object Model is a tree-shaped representation of your HTML in memory. JavaScript can read and modify every node, attribute, and style in real time.</div>
+
+<div class="theory">
+  When a browser loads HTML, it parses it and builds a <strong>tree of Node objects</strong> in memory — the DOM. JavaScript accesses this tree through the <span class="key">document</span> object. Changes to the DOM can trigger the browser to <strong>reflow</strong> (recalculate layout) and <strong>repaint</strong> (redraw pixels), which is expensive. Good DOM work means batching writes, using document fragments, and delegating events rather than attaching listeners to every element.<br><br>
+  <strong>Event bubbling</strong>: when you click a button inside a div inside body, the click event fires on the button first, then bubbles up to div, then to body. This is the mechanism behind event delegation.
+</div>
+
+<div class="code-label">Selecting elements — modern patterns</div>
+<pre><span class="c-cm">// querySelector — CSS selector syntax, returns FIRST match (or null)</span>
+<span class="c-kw">const</span> <span class="c-var">header</span> <span class="c-op">=</span> document.<span class="c-fn">querySelector</span>(<span class="c-str">'#header'</span>);
+<span class="c-kw">const</span> <span class="c-var">btn</span>    <span class="c-op">=</span> document.<span class="c-fn">querySelector</span>(<span class="c-str">'.btn.primary'</span>);
+<span class="c-kw">const</span> <span class="c-var">input</span>  <span class="c-op">=</span> document.<span class="c-fn">querySelector</span>(<span class="c-str">'input[type="email"]'</span>);
+
+<span class="c-cm">// querySelectorAll — returns NodeList (iterable like array, but not Array)</span>
+<span class="c-kw">const</span> <span class="c-var">cards</span> <span class="c-op">=</span> document.<span class="c-fn">querySelectorAll</span>(<span class="c-str">'.card'</span>);
+[...<span class="c-var">cards</span>].<span class="c-fn">forEach</span>(<span class="c-var">card</span> <span class="c-op">=></span> <span class="c-var">card</span>.classList.<span class="c-fn">add</span>(<span class="c-str">'loaded'</span>));
+
+<span class="c-cm">// Tree traversal</span>
+<span class="c-var">header</span>.parentElement;         <span class="c-cm">// go up one level</span>
+<span class="c-var">header</span>.children;              <span class="c-cm">// direct children</span>
+<span class="c-var">header</span>.nextElementSibling;    <span class="c-cm">// sibling after</span>
+<span class="c-var">header</span>.<span class="c-fn">closest</span>(<span class="c-str">'.container'</span>); <span class="c-cm">// walk up to find ancestor matching selector</span></pre>
+
+<div class="code-label">Creating and modifying elements</div>
+<pre><span class="c-kw">const</span> <span class="c-var">li</span> <span class="c-op">=</span> document.<span class="c-fn">createElement</span>(<span class="c-str">'li'</span>);
+<span class="c-var">li</span>.textContent <span class="c-op">=</span> <span class="c-str">'New item'</span>;      <span class="c-cm">// SAFE — escapes HTML automatically</span>
+<span class="c-var">li</span>.innerHTML   <span class="c-op">=</span> <span class="c-str">'&lt;b&gt;Bold&lt;/b&gt;'</span>;   <span class="c-cm">// RISKY — XSS if used with user input!</span>
+<span class="c-var">li</span>.classList.<span class="c-fn">add</span>(<span class="c-str">'item'</span>, <span class="c-str">'active'</span>);
+<span class="c-var">li</span>.<span class="c-fn">setAttribute</span>(<span class="c-str">'data-id'</span>, <span class="c-str">'42'</span>);
+
+<span class="c-cm">// Insert into DOM</span>
+document.<span class="c-fn">querySelector</span>(<span class="c-str">'ul'</span>).<span class="c-fn">append</span>(<span class="c-var">li</span>);    <span class="c-cm">// after last child</span>
+document.<span class="c-fn">querySelector</span>(<span class="c-str">'ul'</span>).<span class="c-fn">prepend</span>(<span class="c-var">li</span>);   <span class="c-cm">// before first child</span>
+
+<span class="c-cm">// PERFORMANCE: batch DOM writes with DocumentFragment</span>
+<span class="c-cm">// Appending 100 items one-by-one = 100 reflows. Use a fragment instead:</span>
+<span class="c-kw">const</span> <span class="c-var">frag</span> <span class="c-op">=</span> document.<span class="c-fn">createDocumentFragment</span>();
+<span class="c-var">items</span>.<span class="c-fn">forEach</span>(<span class="c-var">item</span> <span class="c-op">=></span> {
+  <span class="c-kw">const</span> <span class="c-var">el</span> <span class="c-op">=</span> document.<span class="c-fn">createElement</span>(<span class="c-str">'li'</span>);
+  <span class="c-var">el</span>.textContent <span class="c-op">=</span> <span class="c-var">item</span>.name;
+  <span class="c-var">frag</span>.<span class="c-fn">append</span>(<span class="c-var">el</span>);
+});
+document.<span class="c-fn">querySelector</span>(<span class="c-str">'ul'</span>).<span class="c-fn">append</span>(<span class="c-var">frag</span>); <span class="c-cm">// ONE DOM write, ONE reflow</span></pre>
+
+<div class="code-label">Event delegation — the professional pattern</div>
+<pre><span class="c-cm">// ❌ Beginner: attaches listener to EVERY item</span>
+document.<span class="c-fn">querySelectorAll</span>(<span class="c-str">'.list-item'</span>).<span class="c-fn">forEach</span>(<span class="c-var">item</span> <span class="c-op">=></span> {
+  <span class="c-var">item</span>.<span class="c-fn">addEventListener</span>(<span class="c-str">'click'</span>, <span class="c-fn">handleClick</span>);
+}); <span class="c-cm">// 100 items = 100 listeners in memory. Breaks with dynamic items.</span>
+
+<span class="c-cm">// ✅ Senior: ONE listener on parent, use event bubbling</span>
+document.<span class="c-fn">querySelector</span>(<span class="c-str">'.list'</span>).<span class="c-fn">addEventListener</span>(<span class="c-str">'click'</span>, (<span class="c-var">e</span>) <span class="c-op">=></span> {
+  <span class="c-cm">// e.target = the actual element clicked</span>
+  <span class="c-cm">// .closest() walks up and finds the matching ancestor</span>
+  <span class="c-kw">const</span> <span class="c-var">item</span> <span class="c-op">=</span> <span class="c-var">e</span>.target.<span class="c-fn">closest</span>(<span class="c-str">'.list-item'</span>);
+  <span class="c-kw">if</span> (<span class="c-op">!</span><span class="c-var">item</span>) <span class="c-kw">return</span>; <span class="c-cm">// clicked on list padding, not an item</span>
+
+  <span class="c-fn">handleClick</span>(<span class="c-var">item</span>.<span class="c-fn">dataset</span>.id);
+});
+<span class="c-cm">// ONE listener. Works for dynamically added items too. Memory efficient.</span></pre>
+
+<div class="tip">Never use innerHTML with user-provided content. It's an XSS vulnerability — an attacker can inject &lt;script&gt; tags and run malicious code. Always use textContent for text content, or sanitize with DOMPurify if you must render HTML from users.</div>
+<div class="nav-row"><button class="nav-btn" onclick="goto(5)">← Async/Await</button><button class="nav-btn primary" onclick="goto(7)">Next: this →</button></div>
+</div>
+
+<!-- 7 THIS -->
+<div class="section" id="s7">
+<div class="sec-title">The <code>this</code> keyword</div>
+<div class="sec-sub">The most confusing concept in JS. 'this' is NOT about where a function is defined — it's about HOW the function is CALLED. One rule to remember them all.</div>
+
+<div class="theory">
+  <span class="key">this</span> is a special variable created for every function execution context. Its value depends entirely on <strong>how the function is called</strong>, not where it's defined. There are 5 binding rules, checked in order of precedence:<br><br>
+  <strong>1. new binding</strong> — <code>new Foo()</code> → this = newly created empty object.<br>
+  <strong>2. Explicit binding</strong> — <code>fn.call(ctx)</code>, <code>.apply(ctx)</code>, <code>.bind(ctx)</code> → this = what you explicitly pass.<br>
+  <strong>3. Implicit binding</strong> — <code>obj.method()</code> → this = obj (the object left of the dot).<br>
+  <strong>4. Default binding</strong> — <code>fn()</code> → this = global (window in browser) or undefined in strict mode.<br>
+  <strong>5. Arrow functions</strong> — no binding at all. They inherit <span class="key">this</span> lexically from the surrounding scope at the time of definition — not at call time.
+</div>
+
+<table class="this-table">
+  <thead><tr><th>How called</th><th>this equals</th><th>Rule</th></tr></thead>
+  <tbody>
+    <tr><td>new Foo()</td><td>fresh object {}</td><td><span class="badge green">new binding</span></td></tr>
+    <tr><td>fn.call(obj, args)</td><td>obj — explicit</td><td><span class="badge yellow">explicit</span></td></tr>
+    <tr><td>fn.apply(obj, [args])</td><td>obj — explicit</td><td><span class="badge yellow">explicit</span></td></tr>
+    <tr><td>const g = fn.bind(obj)</td><td>obj — permanent</td><td><span class="badge yellow">explicit</span></td></tr>
+    <tr><td>obj.method()</td><td>obj</td><td><span class="badge yellow">implicit</span></td></tr>
+    <tr><td>fn()</td><td>window / undefined (strict)</td><td><span class="badge red">default</span></td></tr>
+    <tr><td>() => {}</td><td>outer scope's this</td><td><span class="badge green">lexical (no binding)</span></td></tr>
+  </tbody>
+</table>
+
+<div class="code-label">The this problem and its arrow function solution</div>
+<pre><span class="c-kw">class</span> <span class="c-fn">Timer</span> {
+  <span class="c-fn">constructor</span>() { <span class="c-kw">this</span>.seconds <span class="c-op">=</span> <span class="c-num">0</span>; }
+
+  <span class="c-cm">// ❌ Regular function loses 'this' inside callback</span>
+  <span class="c-fn">startBroken</span>() {
+    <span class="c-fn">setInterval</span>(<span class="c-kw">function</span>() {
+      <span class="c-kw">this</span>.seconds<span class="c-op">++</span>; <span class="c-cm">// 'this' = window/undefined — not Timer!</span>
+      <span class="c-cm">// The callback is called as a plain function, not as timer.method()</span>
+    }, <span class="c-num">1000</span>);
+  }
+
+  <span class="c-cm">// ✅ Arrow function inherits 'this' from Timer at definition time</span>
+  <span class="c-fn">startFixed</span>() {
+    <span class="c-fn">setInterval</span>(() <span class="c-op">=></span> {
+      <span class="c-kw">this</span>.seconds<span class="c-op">++</span>; <span class="c-cm">// 'this' = the Timer instance ✓</span>
+    }, <span class="c-num">1000</span>);
+  }
+}
+
+<span class="c-cm">// call vs apply vs bind</span>
+<span class="c-kw">function</span> <span class="c-fn">greet</span>(<span class="c-var">greeting</span>, <span class="c-var">punctuation</span>) {
+  <span class="c-kw">return</span> <span class="c-str">`${greeting}, ${<span class="c-kw">this</span>.name}${punctuation}`</span>;
+}
+<span class="c-kw">const</span> <span class="c-var">p</span> <span class="c-op">=</span> { name: <span class="c-str">'Riya'</span> };
+
+<span class="c-var">greet</span>.<span class="c-fn">call</span>(<span class="c-var">p</span>, <span class="c-str">'Hello'</span>, <span class="c-str">'!'</span>);        <span class="c-cm">// "Hello, Riya!" — args spread out</span>
+<span class="c-var">greet</span>.<span class="c-fn">apply</span>(<span class="c-var">p</span>, [<span class="c-str">'Hello'</span>, <span class="c-str">'!'</span>]);    <span class="c-cm">// "Hello, Riya!" — args in array</span>
+<span class="c-kw">const</span> <span class="c-var">boundGreet</span> <span class="c-op">=</span> <span class="c-var">greet</span>.<span class="c-fn">bind</span>(<span class="c-var">p</span>);  <span class="c-cm">// returns NEW function, call later</span>
+<span class="c-var">boundGreet</span>(<span class="c-str">'Namaste'</span>, <span class="c-str">'!'</span>);         <span class="c-cm">// "Namaste, Riya!"</span></pre>
+
+<div class="warn">Extracting a method from an object loses its context: <code>const { greet } = obj; greet()</code> — 'this' is undefined in strict mode. Fix: <code>const greet = obj.greet.bind(obj)</code> or use class fields with arrow functions: <code>greet = () => { this... }</code>.</div>
+<div class="nav-row"><button class="nav-btn" onclick="goto(6)">← DOM</button><button class="nav-btn primary" onclick="goto(8)">Next: map/filter/reduce →</button></div>
+</div>
+
+<!-- 8 MAP FILTER REDUCE -->
+<div class="section" id="s8">
+<div class="sec-title">map / filter / reduce</div>
+<div class="sec-sub">The functional trio. Transform data without mutation. Master these three and 80% of your data processing code becomes clean, readable one-liners.</div>
+
+<div class="theory">
+  All three are <strong>higher-order functions</strong> — they accept a function as an argument. They never mutate the original array, always returning a new value.<br><br>
+  <strong>map(fn)</strong> — transforms every element. Input length = output length. Use to convert, reshape, or extract data.<br>
+  <strong>filter(fn)</strong> — keeps elements where fn returns truthy. Output is a subset of input.<br>
+  <strong>reduce(fn, initial)</strong> — accumulates elements into a single value. That value can be a number, string, object, or array. The most powerful and most flexible of the three — if in doubt, reduce can do what map and filter do.
+</div>
+
+<div class="code-label">map — transform every element</div>
+<pre><span class="c-kw">const</span> <span class="c-var">products</span> <span class="c-op">=</span> [
+  { id: <span class="c-num">1</span>, name: <span class="c-str">'Laptop'</span>,   price: <span class="c-num">50000</span>, inStock: <span class="c-kw">true</span>  },
+  { id: <span class="c-num">2</span>, name: <span class="c-str">'Mouse'</span>,    price: <span class="c-num">1500</span>,  inStock: <span class="c-kw">false</span> },
+  { id: <span class="c-num">3</span>, name: <span class="c-str">'Keyboard'</span>, price: <span class="c-num">3000</span>,  inStock: <span class="c-kw">true</span>  },
+];
+
+<span class="c-cm">// Extract just the names — [every element] → [transformed element]</span>
+<span class="c-kw">const</span> <span class="c-var">names</span> <span class="c-op">=</span> <span class="c-var">products</span>.<span class="c-fn">map</span>(<span class="c-var">p</span> <span class="c-op">=></span> <span class="c-var">p</span>.name);
+<span class="c-cm">// ['Laptop', 'Mouse', 'Keyboard'] — same length, each item transformed</span>
+
+<span class="c-cm">// Apply 18% GST — creates a NEW array, originals UNTOUCHED</span>
+<span class="c-kw">const</span> <span class="c-var">withGST</span> <span class="c-op">=</span> <span class="c-var">products</span>.<span class="c-fn">map</span>(<span class="c-var">p</span> <span class="c-op">=></span> ({
+  ...<span class="c-var">p</span>,                          <span class="c-cm">// spread existing properties</span>
+  price: Math.<span class="c-fn">round</span>(<span class="c-var">p</span>.price <span class="c-op">*</span> <span class="c-num">1.18</span>),
+  originalPrice: <span class="c-var">p</span>.price
+}));</pre>
+
+<div class="code-label">filter — keep elements matching a condition</div>
+<pre><span class="c-cm">// Keep only in-stock items</span>
+<span class="c-kw">const</span> <span class="c-var">available</span> <span class="c-op">=</span> <span class="c-var">products</span>.<span class="c-fn">filter</span>(<span class="c-var">p</span> <span class="c-op">=></span> <span class="c-var">p</span>.inStock);
+<span class="c-cm">// [{ Laptop }, { Keyboard }]</span>
+
+<span class="c-cm">// Chain map + filter — read left to right like English</span>
+<span class="c-kw">const</span> <span class="c-var">availableNames</span> <span class="c-op">=</span> <span class="c-var">products</span>
+  .<span class="c-fn">filter</span>(<span class="c-var">p</span> <span class="c-op">=></span> <span class="c-var">p</span>.inStock)           <span class="c-cm">// [Laptop, Keyboard]</span>
+  .<span class="c-fn">map</span>(<span class="c-var">p</span>    <span class="c-op">=></span> <span class="c-var">p</span>.name.toUpperCase()); <span class="c-cm">// ['LAPTOP', 'KEYBOARD']</span>
+
+<span class="c-cm">// Remove duplicates</span>
+<span class="c-kw">const</span> <span class="c-var">unique</span> <span class="c-op">=</span> <span class="c-var">arr</span>.<span class="c-fn">filter</span>((<span class="c-var">v</span>, <span class="c-var">i</span>, <span class="c-var">self</span>) <span class="c-op">=></span> <span class="c-var">self</span>.<span class="c-fn">indexOf</span>(<span class="c-var">v</span>) <span class="c-op">===</span> <span class="c-var">i</span>);
+<span class="c-cm">// Or cleaner: [...new Set(arr)]</span></pre>
+
+<div class="code-label">reduce — the Swiss Army knife of array methods</div>
+<pre><span class="c-cm">// --- Basic: sum all prices ---</span>
+<span class="c-cm">// reduce(callback, initialValue)</span>
+<span class="c-cm">// callback(accumulator, currentElement, index, array)</span>
+<span class="c-kw">const</span> <span class="c-var">total</span> <span class="c-op">=</span> <span class="c-var">products</span>.<span class="c-fn">reduce</span>((<span class="c-var">acc</span>, <span class="c-var">p</span>) <span class="c-op">=></span> <span class="c-var">acc</span> <span class="c-op">+</span> <span class="c-var">p</span>.price, <span class="c-num">0</span>);
+<span class="c-cm">// Iteration 1: acc=0,    p=Laptop   → return 0 + 50000 = 50000</span>
+<span class="c-cm">// Iteration 2: acc=50000, p=Mouse   → return 50000 + 1500 = 51500</span>
+<span class="c-cm">// Iteration 3: acc=51500, p=Keyboard→ return 51500 + 3000 = 54500</span>
+<span class="c-cm">// Result: 54500</span>
+
+<span class="c-cm">// --- Advanced: group by property ---</span>
+<span class="c-kw">const</span> <span class="c-var">grouped</span> <span class="c-op">=</span> <span class="c-var">products</span>.<span class="c-fn">reduce</span>((<span class="c-var">acc</span>, <span class="c-var">p</span>) <span class="c-op">=></span> {
+  <span class="c-kw">const</span> <span class="c-var">key</span> <span class="c-op">=</span> <span class="c-var">p</span>.inStock <span class="c-op">?</span> <span class="c-str">'inStock'</span> <span class="c-op">:</span> <span class="c-str">'outOfStock'</span>;
+  (<span class="c-var">acc</span>[<span class="c-var">key</span>] <span class="c-op">??=</span> []).<span class="c-fn">push</span>(<span class="c-var">p</span>);
+  <span class="c-kw">return</span> <span class="c-var">acc</span>;
+}, {});
+<span class="c-cm">// { inStock: [Laptop, Keyboard], outOfStock: [Mouse] }</span>
+
+<span class="c-cm">// --- Advanced: build O(1) lookup map ---</span>
+<span class="c-kw">const</span> <span class="c-var">byId</span> <span class="c-op">=</span> <span class="c-var">products</span>.<span class="c-fn">reduce</span>((<span class="c-var">acc</span>, <span class="c-var">p</span>) <span class="c-op">=></span> ({ ...<span class="c-var">acc</span>, [<span class="c-var">p</span>.id]: <span class="c-var">p</span> }), {});
+<span class="c-var">byId</span>[<span class="c-num">2</span>]; <span class="c-cm">// { id:2, name:'Mouse'... } — instant O(1) access</span></pre>
+
+<div class="tip">Build lookup objects with reduce instead of calling .find() inside a loop. find() in a loop = O(n²). A reduce-built lookup map = O(n) to build + O(1) per lookup. For 10,000 items, that's seconds vs milliseconds.</div>
+<div class="nav-row"><button class="nav-btn" onclick="goto(7)">← this</button><button class="nav-btn primary" onclick="goto(9)">Next: Closures →</button></div>
+</div>
+
+<!-- 9 CLOSURES -->
+<div class="section" id="s9">
+<div class="sec-title">Closures & Scope</div>
+<div class="sec-sub">A closure is when a function remembers and can access variables from the scope where it was created — even after that outer scope has finished executing. This powers React hooks, modules, memoization, and more.</div>
+
+<div class="theory">
+  Every time a function is created in JavaScript, it forms a <strong>closure</strong> — it carries a reference to its surrounding lexical environment (the scope it was born in). This means the inner function can access outer variables even after the outer function has returned and its call stack frame is gone. The variables live on in memory because the closure holds a reference.<br><br>
+  Closures power: <strong>data privacy/encapsulation</strong>, <strong>factory functions</strong>, <strong>memoization</strong>, <strong>partial application/currying</strong>, and the <strong>module pattern</strong>. They're also the mechanism behind every React hook you've ever used — useState stores its value in a closure that React manages internally.
+</div>
+
+<div class="code-label">Closure basics — a function remembering its birth scope</div>
+<pre><span class="c-kw">function</span> <span class="c-fn">makeCounter</span>(<span class="c-var">initialValue</span> <span class="c-op">=</span> <span class="c-num">0</span>) {
+  <span class="c-kw">let</span> <span class="c-var">count</span> <span class="c-op">=</span> <span class="c-var">initialValue</span>; <span class="c-cm">// private — not accessible from outside</span>
+
+  <span class="c-kw">return</span> {
+    <span class="c-fn">increment</span>: () <span class="c-op">=></span> <span class="c-op">++</span><span class="c-var">count</span>,
+    <span class="c-fn">decrement</span>: () <span class="c-op">=></span> <span class="c-op">--</span><span class="c-var">count</span>,
+    <span class="c-fn">reset</span>:     () <span class="c-op">=></span> { <span class="c-var">count</span> <span class="c-op">=</span> <span class="c-var">initialValue</span>; },
+    <span class="c-fn">getCount</span>:  () <span class="c-op">=></span> <span class="c-var">count</span>
+  };
+}
+
+<span class="c-kw">const</span> <span class="c-var">counter</span> <span class="c-op">=</span> <span class="c-fn">makeCounter</span>(<span class="c-num">10</span>);
+<span class="c-var">counter</span>.<span class="c-fn">increment</span>(); <span class="c-cm">// count = 11</span>
+<span class="c-var">counter</span>.<span class="c-fn">increment</span>(); <span class="c-cm">// count = 12</span>
+<span class="c-var">counter</span>.<span class="c-fn">decrement</span>(); <span class="c-cm">// count = 11</span>
+<span class="c-var">counter</span>.<span class="c-fn">getCount</span>();  <span class="c-cm">// 11</span>
+<span class="c-cm">// You can NEVER access 'count' directly — it's truly private!</span>
+
+<span class="c-cm">// Two counters are fully independent — each has its own closure</span>
+<span class="c-kw">const</span> <span class="c-var">c2</span> <span class="c-op">=</span> <span class="c-fn">makeCounter</span>(<span class="c-num">100</span>);
+<span class="c-var">c2</span>.<span class="c-fn">increment</span>(); <span class="c-cm">// c2's count = 101, counter's count still 11</span></pre>
+
+<div class="code-label">Memoization — caching expensive results with closures</div>
+<pre><span class="c-kw">function</span> <span class="c-fn">memoize</span>(<span class="c-var">fn</span>) {
+  <span class="c-kw">const</span> <span class="c-var">cache</span> <span class="c-op">=</span> <span class="c-kw">new</span> <span class="c-fn">Map</span>(); <span class="c-cm">// closure — persists across all calls</span>
+
+  <span class="c-kw">return function</span>(...<span class="c-var">args</span>) {
+    <span class="c-kw">const</span> <span class="c-var">key</span> <span class="c-op">=</span> <span class="c-kw">JSON</span>.<span class="c-fn">stringify</span>(<span class="c-var">args</span>);
+
+    <span class="c-kw">if</span> (<span class="c-var">cache</span>.<span class="c-fn">has</span>(<span class="c-var">key</span>)) {
+      <span class="c-fn">console</span>.<span class="c-fn">log</span>(<span class="c-str">'cache hit!'</span>);
+      <span class="c-kw">return</span> <span class="c-var">cache</span>.<span class="c-fn">get</span>(<span class="c-var">key</span>);
+    }
+
+    <span class="c-kw">const</span> <span class="c-var">result</span> <span class="c-op">=</span> <span class="c-var">fn</span>(...<span class="c-var">args</span>);
+    <span class="c-var">cache</span>.<span class="c-fn">set</span>(<span class="c-var">key</span>, <span class="c-var">result</span>);
+    <span class="c-kw">return</span> <span class="c-var">result</span>;
+  };
+}
+
+<span class="c-kw">const</span> <span class="c-fn">heavyCalc</span> <span class="c-op">=</span> (<span class="c-var">n</span>) <span class="c-op">=></span> { <span class="c-cm">/* imagine 200ms CPU work */</span> <span class="c-kw">return</span> <span class="c-var">n</span> <span class="c-op">*</span> <span class="c-var">n</span>; };
+<span class="c-kw">const</span> <span class="c-var">fastCalc</span> <span class="c-op">=</span> <span class="c-fn">memoize</span>(<span class="c-var">heavyCalc</span>);
+
+<span class="c-var">fastCalc</span>(<span class="c-num">100</span>); <span class="c-cm">// computes — 200ms. cache now has key "[100]"</span>
+<span class="c-var">fastCalc</span>(<span class="c-num">100</span>); <span class="c-cm">// cache hit! — 0ms</span>
+<span class="c-var">fastCalc</span>(<span class="c-num">200</span>); <span class="c-cm">// computes — 200ms (different args)</span></pre>
+
+<div class="code-label">Currying — partial application using closures</div>
+<pre><span class="c-cm">// A curried function returns a new function for each argument</span>
+<span class="c-kw">const</span> <span class="c-fn">multiply</span> <span class="c-op">=</span> <span class="c-var">a</span> <span class="c-op">=></span> <span class="c-var">b</span> <span class="c-op">=></span> <span class="c-var">a</span> <span class="c-op">*</span> <span class="c-var">b</span>;
+<span class="c-cm">// multiply(2) returns: b => 2 * b  (2 is captured in closure)</span>
+
+<span class="c-kw">const</span> <span class="c-var">double</span> <span class="c-op">=</span> <span class="c-fn">multiply</span>(<span class="c-num">2</span>);  <span class="c-cm">// a = 2, now waiting for b</span>
+<span class="c-var">double</span>(<span class="c-num">5</span>);  <span class="c-cm">// 10</span>
+<span class="c-var">double</span>(<span class="c-num">21</span>); <span class="c-cm">// 42</span>
+
+<span class="c-cm">// Real-world use: configurable/reusable functions</span>
+<span class="c-kw">const</span> <span class="c-fn">addTax</span> <span class="c-op">=</span> <span class="c-var">rate</span> <span class="c-op">=></span> <span class="c-var">price</span> <span class="c-op">=></span> Math.<span class="c-fn">round</span>(<span class="c-var">price</span> <span class="c-op">*</span> (<span class="c-num">1</span> <span class="c-op">+</span> <span class="c-var">rate</span>));
+<span class="c-kw">const</span> <span class="c-var">addGST</span>  <span class="c-op">=</span> <span class="c-fn">addTax</span>(<span class="c-num">0.18</span>);  <span class="c-cm">// rate captured in closure</span>
+<span class="c-kw">const</span> <span class="c-var">addVAT</span>  <span class="c-op">=</span> <span class="c-fn">addTax</span>(<span class="c-num">0.20</span>);
+
+<span class="c-var">products</span>.<span class="c-fn">map</span>(<span class="c-var">p</span> <span class="c-op">=></span> ({ ...<span class="c-var">p</span>, price: <span class="c-fn">addGST</span>(<span class="c-var">p</span>.price) }));
+<span class="c-cm">// Clean, reusable, no magic numbers repeated everywhere</span></pre>
+
+<div class="tip">React's useState is a closure. The state value lives in React's internal scope. Every re-render creates a new closure capturing the current state value. That's why stale closures are a thing in React — if a callback captures an old state value, it won't see the updated one. The rule: always pass a function updater setState(prev => prev + 1) when new state depends on old state.</div>
+<div class="nav-row"><button class="nav-btn" onclick="goto(8)">← map/filter/reduce</button><button class="nav-btn" onclick="goto(0)" style="flex:0.5">↺ Start Over</button></div>
+</div>
+
+</div><!-- content -->
+
+<script>
+let current = 0;
+const total = 10;
+
+function goto(n) {
+  document.getElementById('s'+current).classList.remove('active');
+  document.querySelectorAll('.ch-btn')[current].classList.remove('active');
+  current = n;
+  document.getElementById('s'+current).classList.add('active');
+  document.querySelectorAll('.ch-btn')[current].classList.add('active');
+  document.getElementById('prog').style.width = ((n+1)/total*100)+'%';
+  window.scrollTo(0,0);
+}
+
+// Event loop animation
+let elTimer = null;
+function resetEL() {
+  clearTimeout(elTimer);
+  document.getElementById('el-stack').innerHTML = '<div class="el-item">main()</div>';
+  document.getElementById('el-apis').innerHTML = '';
+  document.getElementById('el-micro').innerHTML = '';
+  document.getElementById('el-macro').innerHTML = '';
+  document.getElementById('el-out').textContent = '';
+}
+
+function addItem(id, text, cls) {
+  const d = document.createElement('div');
+  d.className = 'el-item' + (cls ? ' '+cls : '');
+  d.textContent = text;
+  document.getElementById(id).append(d);
+}
+function removeFirst(id) {
+  const c = document.getElementById(id);
+  if (c.firstChild) c.removeChild(c.firstChild);
+}
+function removeLast(id) {
+  const c = document.getElementById(id);
+  const kids = c.children;
+  if (kids.length > 1) c.removeChild(kids[kids.length - 1]);
+}
+function addOut(text) {
+  document.getElementById('el-out').textContent += text + '\n';
+}
+
+function runEL() {
+  resetEL();
+  const steps = [
+    () => { addItem('el-stack', 'console.log("1")'); },
+    () => { removeLast('el-stack'); addOut('▶ 1 — synchronous'); },
+    () => { addItem('el-stack', 'setTimeout(cb,0)'); },
+    () => { removeLast('el-stack'); addItem('el-apis', 'timer (0ms)'); },
+    () => { addItem('el-stack', 'Promise.resolve().then'); },
+    () => { removeLast('el-stack'); addItem('el-micro', 'Promise.cb', 'micro'); },
+    () => { addItem('el-stack', 'console.log("2")'); },
+    () => { removeLast('el-stack'); addOut('▶ 2 — synchronous'); },
+    () => {
+      document.getElementById('el-stack').innerHTML = '<div class="el-item" style="opacity:.4">[ empty ]</div>';
+      addOut('↺ Stack empty → drain microtasks');
+    },
+    () => { removeFirst('el-apis'); addItem('el-macro', 'setTimeout.cb', 'macro'); },
+    () => { addItem('el-stack', 'Promise.cb'); },
+    () => { removeLast('el-stack'); removeFirst('el-micro'); addOut('▶ 3 — microtask'); },
+    () => { addOut('↺ Microtasks done → pick macrotask'); },
+    () => { addItem('el-stack', 'setTimeout.cb'); removeFirst('el-macro'); },
+    () => { removeLast('el-stack'); addOut('▶ 4 — macrotask'); },
+    () => { addOut('✓ Complete.'); }
+  ];
+  let i = 0;
+  function next() { if (i < steps.length) { steps[i++](); elTimer = setTimeout(next, 700); } }
+  next();
+}
+</script>
+</body>
+</html>
